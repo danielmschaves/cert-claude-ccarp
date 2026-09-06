@@ -1,0 +1,3 @@
+# progress.jsonl is an append-only log. Union-merge is exactly the right strategy:
+# two machines drilling in parallel produce disjoint lines, never a real conflict.
+progress.jsonl merge=union

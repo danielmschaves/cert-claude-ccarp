@@ -1,0 +1,117 @@
+{
+  "exam": {
+    "id": "ccarp",
+    "name": "Anthropic Claude Certified Architect - Professional",
+    "guide_version": "1.0",
+    "guide_date": "2026-07",
+    "source": "trust.anthropic.com / Partner Academy",
+    "retrieved": "2026-09-06",
+    "items": 63,
+    "minutes": 120,
+    "item_formats": ["multiple_choice", "multiple_response"],
+    "linked_scenarios": false,
+    "scale": {
+      "min": 100,
+      "max": 1000,
+      "cut": 720,
+      "estimator": "round(100 + 900 * pct)",
+      "published_mapping": false
+    }
+  },
+  "domains": [
+    {
+      "id": "d1",
+      "name": "Solution Design & Architecture",
+      "weight": 0.17,
+      "items": 11,
+      "objectives": [
+        {"id": "1.1", "name": "translate business problems"},
+        {"id": "1.2", "name": "end-to-end architecture (input to processing to output to feedback)"},
+        {"id": "1.3", "name": "select pattern (workflow, agentic, augmented LLM)"},
+        {"id": "1.4", "name": "multi-agent orchestration"},
+        {"id": "1.5", "name": "decomposition"},
+        {"id": "1.6", "name": "align to business value pillars"}
+      ]
+    },
+    {
+      "id": "d2",
+      "name": "Models, Prompting & Context Engineering",
+      "weight": 0.13,
+      "items": 8,
+      "objectives": [
+        {"id": "2.1", "name": "model selection trade-offs"},
+        {"id": "2.2", "name": "system prompts, templates, guardrails"},
+        {"id": "2.3", "name": "prompt techniques (zero/few-shot, CoT)"},
+        {"id": "2.4", "name": "context window and token optimisation"},
+        {"id": "2.5", "name": "prompt reuse (caching, modular prompts, Skills)"}
+      ]
+    },
+    {
+      "id": "d3",
+      "name": "Integration",
+      "weight": 0.19,
+      "items": 12,
+      "objectives": [
+        {"id": "3.1", "name": "capability bloat in tool/agent config"},
+        {"id": "3.2", "name": "authn/authz gaps"},
+        {"id": "3.3", "name": "accuracy-latency trade-offs"},
+        {"id": "3.4", "name": "observability at scale"},
+        {"id": "3.5", "name": "RAG chunking and indexing"},
+        {"id": "3.6", "name": "retrieval matched to data shape and query pattern"},
+        {"id": "3.7", "name": "connection protocols (MCP, API/CLI, agent-to-agent)"},
+        {"id": "3.8", "name": "progressive discovery vs. monolithic context"}
+      ]
+    },
+    {
+      "id": "d4",
+      "name": "Evaluation, Testing & Optimization",
+      "weight": 0.16,
+      "items": 10,
+      "objectives": [
+        {"id": "4.1", "name": "eval metrics"},
+        {"id": "4.2", "name": "eval datasets and mixed-method test frameworks"},
+        {"id": "4.3", "name": "A/B testing"},
+        {"id": "4.4", "name": "diagnose failures (prompt, hallucination, model mismatch)"},
+        {"id": "4.5", "name": "token/latency/cost optimisation"},
+        {"id": "4.6", "name": "logging and observability"}
+      ]
+    },
+    {
+      "id": "d5",
+      "name": "Governance, Safety & Risk",
+      "weight": 0.14,
+      "items": 9,
+      "objectives": [
+        {"id": "5.1", "name": "guardrails"},
+        {"id": "5.2", "name": "risks and failure modes"},
+        {"id": "5.3", "name": "human-in-the-loop"},
+        {"id": "5.4", "name": "compliance (GDPR, HIPAA, FedRAMP)"},
+        {"id": "5.5", "name": "ethical AI (bias, fairness, transparency)"}
+      ]
+    },
+    {
+      "id": "d6",
+      "name": "Stakeholder Communication & Lifecycle",
+      "weight": 0.14,
+      "items": 9,
+      "objectives": [
+        {"id": "6.1", "name": "structured discovery"},
+        {"id": "6.2", "name": "communicate decisions and trade-offs"},
+        {"id": "6.3", "name": "feedback loops and SLAs"},
+        {"id": "6.4", "name": "document architectures"},
+        {"id": "6.5", "name": "lifecycle phases"}
+      ]
+    },
+    {
+      "id": "d7",
+      "name": "Developer Productivity & Operational Enablement",
+      "weight": 0.07,
+      "items": 4,
+      "objectives": [
+        {"id": "7.1", "name": "configure tools for teams"},
+        {"id": "7.2", "name": "AI-assisted workflows"},
+        {"id": "7.3", "name": "debugging and operational resolution"}
+      ]
+    }
+  ]
+}
