@@ -126,11 +126,11 @@ uv run ccarp review --wrong
 
 ## Build state
 
-M1 `validate` ✅ · M2 `drill` (two-tier selection) ✅ · M3 `stats` · M4 full tier ladder ·
-M5 `exam --timed` · M6 `review --wrong` + `lint.py` + bulk authoring.
+M1 `validate` ✅ · M2 `drill` ✅ (full 5-tier ladder — M4 folded in, the classifier was the
+whole cost) · M3 `stats` · M5 `exam --timed` · M6 `review --wrong` + `lint.py` + bulk authoring.
 
-`selection.py` currently drains `TIER_ORDER_M2` (unseen → wrong). M4 swaps in `TIER_ORDER`.
-Because the module is pure, that swap touches nothing else.
+Banks: **d1 has 10 items; d2–d7 are empty.** Authoring the remaining six domains is the
+long pole, and `validate` reports the per-domain gap on every run.
 
 ## Conventions
 

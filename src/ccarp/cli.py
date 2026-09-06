@@ -4,14 +4,40 @@ from __future__ import annotations
 
 import argparse
 import sys
+from datetime import UTC, datetime
 
-from . import render, validate
+from . import bank as bank_mod
+from . import progress as progress_mod
+from . import render, runner, selection, validate
+from .config import DEFAULT_DRILL_N
 
 
 def _cmd_validate(args: argparse.Namespace) -> int:
     errors, warnings, summary = validate.run()
     render.validate_report(errors, warnings, summary)
     return 1 if errors else 0
+
+
+def _cmd_drill(args: argparse.Namespace) -> int:
+    bank = bank_mod.load().filter(domain=args.domain, obj=args.obj)
+    if not len(bank):
+        render.err("no items match -- author some in banks/ first")
+        return 1
+
+    attempts = progress_mod.read()
+    items, shortfall = selection.select(bank, attempts, datetime.now(UTC), args.n)
+    render.shortfall(shortfall)
+    if not items:
+        return 0
+
+    session = runner.new_session_id("drill")
+    try:
+        results = runner.run(items, mode="drill", session=session)
+    except KeyboardInterrupt:
+        render.out()
+        results = []
+    render.session_summary("drill", results)
+    return 0
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -23,6 +49,12 @@ def build_parser() -> argparse.ArgumentParser:
 
     p_validate = sub.add_parser("validate", help="check blueprint and banks")
     p_validate.set_defaults(func=_cmd_validate)
+
+    p_drill = sub.add_parser("drill", help="drill questions, newest material first")
+    p_drill.add_argument("-n", type=int, default=DEFAULT_DRILL_N, help="how many items")
+    p_drill.add_argument("--domain", help="restrict to one domain, e.g. d3")
+    p_drill.add_argument("--obj", help="restrict to one objective, e.g. 3.5")
+    p_drill.set_defaults(func=_cmd_drill)
 
     return parser
 

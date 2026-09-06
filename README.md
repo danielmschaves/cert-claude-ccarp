@@ -27,8 +27,6 @@ repeat run serves new material rather than the same items:
 When the tiers can't fill your run it serves fewer and tells you how short it is and when the
 next item frees up. It never silently repeats an item.
 
-*(`shaky`/`solid`/`retired` land in M4; `drill` currently drains `unseen` → `wrong`.)*
-
 ## Exam facts
 
 63 items · 120 minutes · criterion-referenced · scaled 100–1000 · cut 720. Sourced from Guide

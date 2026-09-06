@@ -1,4 +1,361 @@
 {
   "domain": "d1",
-  "items": []
+  "items": [
+    {
+      "qid": "d1-001",
+      "obj": "1.3",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "An insurer processes several thousand first-notice-of-loss forms a day. Every form goes through the same five steps: extract fields, validate against the policy record, check for missing documents, assign a severity code, and route to a queue. The steps never vary and each one has a clear success test.",
+      "principle": "determinism before autonomy: use a workflow when the path is already known",
+      "options": [
+        {
+          "key": "A",
+          "text": "A fixed workflow chaining the five steps, with a model call at each step",
+          "correct": true,
+          "rationale": "The path is known and each stage is independently checkable, so a workflow buys determinism, per-stage retries and cheap failure localisation at no loss of capability."
+        },
+        {
+          "key": "B",
+          "text": "A single agent given a tool for each step, choosing its own order",
+          "correct": false,
+          "rationale": "Agents are the right call for open-ended work, but here the model pays planning tokens to rediscover a sequence you already know, and introduces run-to-run variation into a process whose value is that it never varies."
+        },
+        {
+          "key": "C",
+          "text": "An orchestrator agent delegating each step to a dedicated subagent",
+          "correct": false,
+          "rationale": "Legitimate for independent, context-heavy subtasks. This pipeline is strictly linear, so the coordination overhead buys neither parallelism nor independent exploration."
+        },
+        {
+          "key": "D",
+          "text": "One augmented LLM call carrying all five instructions and the policy record",
+          "correct": false,
+          "rationale": "Workable, and it minimises round trips. But collapsing five checkable stages into one call means a failure anywhere invalidates everything and cannot be localised or retried in isolation."
+        }
+      ]
+    },
+    {
+      "qid": "d1-002",
+      "obj": "1.3",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A security team wants help triaging alerts. Each investigation differs: some need a single log query, others a config diff, others three or four rounds of narrowing before an analyst can call it a true positive. The team has tried and failed to enumerate the steps up front.",
+      "principle": "agentic when the path cannot be enumerated in advance",
+      "options": [
+        {
+          "key": "A",
+          "text": "An agent with a bounded tool set and an explicit step budget",
+          "correct": true,
+          "rationale": "When the number and order of steps genuinely cannot be known before the work starts, delegating control flow to the model is what the agentic pattern is for; the budget and the bounded tool set are what keep it safe."
+        },
+        {
+          "key": "B",
+          "text": "A workflow that branches on alert type",
+          "correct": false,
+          "rationale": "Branching workflows are the right answer whenever the branch set is knowable. Here the team has already established that investigations vary in depth within a single alert type, so the branch set does not exist to be written."
+        },
+        {
+          "key": "C",
+          "text": "A single prompt preloaded with the recent log window",
+          "correct": false,
+          "rationale": "Grounding the model in the logs is sound and often sufficient. It does not address the actual difficulty, which is that each step's result determines what to look at next."
+        },
+        {
+          "key": "D",
+          "text": "A prompt chain of fixed narrowing steps",
+          "correct": false,
+          "rationale": "Chaining is a real improvement over one prompt and adds per-step checks, but it fixes the depth of the investigation at design time, which is the one thing this workload will not hold still for."
+        }
+      ]
+    },
+    {
+      "qid": "d1-003",
+      "obj": "1.4",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A team split a document-review assistant into four agents that hand text to one another: intake, summarising, citation, and formatting. Since the split, latency has roughly tripled and outputs have become less consistent. The four steps are strictly sequential and none of them searches independently.",
+      "principle": "multi-agent earns its coordination cost through parallelism or independent exploration",
+      "options": [
+        {
+          "key": "A",
+          "text": "The work is a sequential pipeline, so agent-to-agent handoff adds coordination cost without buying parallelism or independent exploration",
+          "correct": true,
+          "rationale": "This names the structural mistake. Multi-agent pays for itself when subtasks run concurrently or need separate context; a linear chain has neither property, so every handoff is pure overhead and every boundary a place for drift."
+        },
+        {
+          "key": "B",
+          "text": "The agents have no shared memory store",
+          "correct": false,
+          "rationale": "Shared state is a genuine fix for context lost across handoffs and would help the consistency symptom. It leaves the tripled latency unexplained and keeps four agents where the work needs one."
+        },
+        {
+          "key": "C",
+          "text": "The summarising agent needs a more capable model",
+          "correct": false,
+          "rationale": "Upgrading the weakest stage is a standard and often effective move. It does not account for a regression that began with the split rather than with the model."
+        },
+        {
+          "key": "D",
+          "text": "The agents need stricter output schemas at each boundary",
+          "correct": false,
+          "rationale": "Schemas at handoff boundaries are good practice and would reduce the inconsistency. They treat the symptom: the boundaries themselves are what the architecture should not have."
+        }
+      ]
+    },
+    {
+      "qid": "d1-004",
+      "obj": "1.4",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A market research tool must gather evidence on a company from regulatory filings, news coverage, and job postings, then produce a single brief. The three gathering tasks share no intermediate state and each takes many tool calls; the writing step needs all three.",
+      "principle": "parallel subagents when subtasks are independent and context-heavy",
+      "options": [
+        {
+          "key": "A",
+          "text": "Three subagents gathering in parallel into separate contexts, then one writer agent over their outputs",
+          "correct": true,
+          "rationale": "The subtasks are independent and each accumulates a lot of context, which is exactly the shape multi-agent is for: concurrency on the gathering, and three contexts kept apart so none of them crowds the others out."
+        },
+        {
+          "key": "B",
+          "text": "A single agent looping through the three sources in turn",
+          "correct": false,
+          "rationale": "Simpler to build and reason about, and correct for lighter work. It serialises three independent jobs and lands all three sources in one context window."
+        },
+        {
+          "key": "C",
+          "text": "A fixed workflow with three sequential retrieval stages, then a writing stage",
+          "correct": false,
+          "rationale": "The stage boundaries are right and worth keeping. Making them sequential still forfeits the parallelism that is available for free here."
+        },
+        {
+          "key": "D",
+          "text": "Three parallel subagents that each draft their own section, concatenated",
+          "correct": false,
+          "rationale": "Parallelises the expensive part, which is most of the win. But no component ever sees all the evidence at once, so the brief becomes three stapled fragments rather than one synthesis."
+        }
+      ]
+    },
+    {
+      "qid": "d1-005",
+      "obj": "1.1",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A COO says the support team is drowning and wants AI to fix it. Discovery finds that agents spend the bulk of each ticket looking up account state across four systems, and comparatively little time composing the reply itself.",
+      "principle": "solve the measured bottleneck, not the stated symptom",
+      "options": [
+        {
+          "key": "A",
+          "text": "Cut time-to-context by assembling an account summary before the agent opens the ticket",
+          "correct": true,
+          "rationale": "Discovery located the cost in lookup, not composition, so this is the one option aimed at the measured bottleneck. Translating a business complaint means replacing the stated symptom with the observed constraint."
+        },
+        {
+          "key": "B",
+          "text": "Deflect a share of tickets with a customer-facing assistant",
+          "correct": false,
+          "rationale": "Deflection is often the highest-leverage support intervention and directly addresses volume. Here the evidence points at cost per ticket rather than ticket count, so it is a bet against the discovery data."
+        },
+        {
+          "key": "C",
+          "text": "Generate suggested replies for agents to edit",
+          "correct": false,
+          "rationale": "A well-proven support pattern with a clear adoption path. It automates the part of the job the team was already fast at."
+        },
+        {
+          "key": "D",
+          "text": "Summarise ticket history so handoffs between agents lose less context",
+          "correct": false,
+          "rationale": "Real value, and it touches the same underlying problem of assembling context. It is a narrower slice of it, and handoffs were not what discovery flagged."
+        }
+      ]
+    },
+    {
+      "qid": "d1-006",
+      "obj": "1.6",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A team proposes an agent that drafts engineering design documents. Today a senior engineer spends about two afternoons on a draft. Reviewers say current document quality is fine, and no one has tied design docs to revenue or to any compliance obligation.",
+      "principle": "claim the value pillar the evidence actually supports",
+      "options": [
+        {
+          "key": "A",
+          "text": "Productivity: reclaiming senior engineering hours on a task whose quality bar is already being met",
+          "correct": true,
+          "rationale": "It is the only pillar the evidence reaches. Time spent is measured, quality is stipulated as adequate, and nothing else has been established, so this is the claim that survives a CFO asking what it is based on."
+        },
+        {
+          "key": "B",
+          "text": "Revenue growth, since faster design docs mean faster shipping",
+          "correct": false,
+          "rationale": "Plausible and the kind of case that does get made. The causal chain from draft time to shipped revenue has several unmeasured links, and asserting it invites a challenge the team cannot answer."
+        },
+        {
+          "key": "C",
+          "text": "Risk reduction through more consistent documentation",
+          "correct": false,
+          "rationale": "A sound pillar for documentation work generally. Reviewers have already said quality is fine, so there is no risk delta in evidence to reduce."
+        },
+        {
+          "key": "D",
+          "text": "Cost avoidance, by reducing the number of senior engineers needed",
+          "correct": false,
+          "rationale": "Cost avoidance is a legitimate pillar and the hours are real. Reclaimed hours are not the same as removed headcount, and claiming so tends to cost the project its sponsors."
+        }
+      ]
+    },
+    {
+      "qid": "d1-007",
+      "obj": "1.2",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "An architecture runs: ticket arrives, retrieve similar past tickets, draft a reply, human approves, send. It has been in production for a quarter. Approvers are rewriting more of each draft than they used to, while the retrieval corpus and the prompt have not changed.",
+      "principle": "input to processing to output to feedback: a loop with no feedback path cannot improve",
+      "options": [
+        {
+          "key": "A",
+          "text": "There is no path carrying approver edits back into the retrieval corpus or the prompt",
+          "correct": true,
+          "rationale": "The edits are a graded signal the system generates every single day and then discards. Without a feedback leg the architecture cannot improve, and a static system in a drifting world degrades exactly the way the approvers are describing."
+        },
+        {
+          "key": "B",
+          "text": "Retrieved tickets are not cached between similar requests",
+          "correct": false,
+          "rationale": "A real and easy optimisation that would cut both cost and latency. Neither of those is the reported problem, and caching would if anything entrench the stale corpus."
+        },
+        {
+          "key": "C",
+          "text": "Drafts carry no confidence score to route low-confidence cases differently",
+          "correct": false,
+          "rationale": "Confidence-based routing is a strong addition to a human-in-the-loop design and would focus reviewer attention. The reviewers' corrections would still go nowhere."
+        },
+        {
+          "key": "D",
+          "text": "There is no fallback when retrieval returns nothing useful",
+          "correct": false,
+          "rationale": "A genuine robustness gap worth closing before it bites. It explains occasional bad drafts, not a steady quarter-long decline."
+        }
+      ]
+    },
+    {
+      "qid": "d1-008",
+      "obj": "1.2",
+      "rev": 1,
+      "format": "multiple_response",
+      "select_n": 2,
+      "stem": "A team is finalising the end-to-end design for an invoice-processing assistant. They have specified input validation, model processing, and output formatting, and are about to build. They expect to operate and improve this system for years.",
+      "principle": "a stage is only operable if it is observable, and only improvable if outcomes are captured",
+      "options": [
+        {
+          "key": "A",
+          "text": "A feedback step that records the corrections downstream users make to outputs",
+          "correct": true,
+          "rationale": "Closes the loop. Without captured outcomes there is no eval set, no drift signal, and no principled basis for any future change to the prompt or the model."
+        },
+        {
+          "key": "B",
+          "text": "Per-stage structured logging tied together by a correlation id",
+          "correct": true,
+          "rationale": "Makes the pipeline debuggable as a pipeline rather than as three opaque boxes; without it, localising a failure to a stage is guesswork once the system is under load."
+        },
+        {
+          "key": "C",
+          "text": "A more capable model at the processing stage",
+          "correct": false,
+          "rationale": "May well raise quality and is a reasonable thing to try. It improves the output without making the system any easier to operate or to reason about later."
+        },
+        {
+          "key": "D",
+          "text": "A second formatting pass to enforce style consistency",
+          "correct": false,
+          "rationale": "Addresses a real class of output defect. It is another processing stage, so it adds to what must be operated rather than to the ability to operate it."
+        },
+        {
+          "key": "E",
+          "text": "A larger set of few-shot examples in the processing prompt",
+          "correct": false,
+          "rationale": "Often the cheapest accuracy win available and worth doing. It is a tuning change to one stage, not a structural property of the architecture."
+        }
+      ]
+    },
+    {
+      "qid": "d1-009",
+      "obj": "1.5",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "An agent reconciling supplier invoices against purchase orders fails intermittently. Traces show a single call asks the model to parse the invoice, match line items, flag discrepancies, and write a summary email. Almost every failure is in the matching, but the entire call is retried each time.",
+      "principle": "decompose at the boundaries where an intermediate output can be verified",
+      "options": [
+        {
+          "key": "A",
+          "text": "Split into stages whose outputs can each be checked, so matching can be validated and retried on its own",
+          "correct": true,
+          "rationale": "The right seam is wherever you can assert something about the intermediate result. Cutting there shrinks the retry to the failing stage and turns a vague 'it failed' into a specific, testable claim about matching."
+        },
+        {
+          "key": "B",
+          "text": "Split by data source, separating invoice parsing from purchase-order lookup",
+          "correct": false,
+          "rationale": "A natural decomposition and better than one call. It cuts across the problem: matching spans both sources, so the failing step stays monolithic and unverifiable."
+        },
+        {
+          "key": "C",
+          "text": "Keep the single call but prompt the model to reason step by step before answering",
+          "correct": false,
+          "rationale": "Chain-of-thought is a reasonable first response to a reasoning failure and may raise the matching success rate. The blast radius is unchanged, so the intermittent failures stay expensive and undiagnosable."
+        },
+        {
+          "key": "D",
+          "text": "Keep the single call and add a validation step on the final email",
+          "correct": false,
+          "rationale": "End-of-pipeline validation is worth having and would catch bad output. Detecting the failure after the fact still forces a retry of all four tasks to fix one."
+        }
+      ]
+    },
+    {
+      "qid": "d1-010",
+      "obj": "1.3",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A policy team needs to answer staff questions about an internal handbook that is revised every month. The questions are one-off and self-contained, and each answer must cite the handbook section it came from. No question requires acting on the answer.",
+      "principle": "augmented LLM when a single grounded call answers the question",
+      "options": [
+        {
+          "key": "A",
+          "text": "A single augmented LLM call with retrieval over the handbook",
+          "correct": true,
+          "rationale": "One retrieval hop supplies everything the answer needs, including the citation. The augmented LLM is the least machinery that fully solves the problem, which is what makes it the right pattern rather than merely an adequate one."
+        },
+        {
+          "key": "B",
+          "text": "An agent with a handbook search tool and a step budget",
+          "correct": false,
+          "rationale": "Genuinely more flexible, and the obvious choice if follow-up questions were in scope. For a self-contained single-hop lookup the autonomy adds latency and variance and buys nothing."
+        },
+        {
+          "key": "C",
+          "text": "A workflow of classify, retrieve, answer, then verify the citation",
+          "correct": false,
+          "rationale": "Each stage is defensible and the verification stage is attractive given the citation requirement. It is four calls where one grounded call already produces a citable answer."
+        },
+        {
+          "key": "D",
+          "text": "Place the entire handbook in the prompt on every question",
+          "correct": false,
+          "rationale": "Simple, and it removes retrieval as a source of error, which is a real advantage. It pays for the whole handbook on every question and gives the model no signal about which section the answer came from."
+        }
+      ]
+    }
+  ]
 }

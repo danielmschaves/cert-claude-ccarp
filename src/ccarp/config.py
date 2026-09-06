@@ -29,9 +29,6 @@ COOLDOWN_HOURS = {
 # Order tiers are drained in. Selection falls to the next tier only when the current is dry.
 TIER_ORDER = ("unseen", "wrong", "shaky", "solid", "retired")
 
-# M2 ships with the first two only; M4 swaps in the full ladder.
-TIER_ORDER_M2 = ("unseen", "wrong")
-
 DEFAULT_DRILL_N = 20
 LAST_N_WINDOW = 50
 

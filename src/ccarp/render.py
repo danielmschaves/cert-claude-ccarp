@@ -60,3 +60,130 @@ def validate_report(errors: list[str], warnings: list[str], summary: dict) -> No
     else:
         suffix = f" ({len(warnings)} warning(s))" if warnings else ""
         out(c(f"OK{suffix}", GREEN))
+
+
+def _fmt_hours(hours: float) -> str:
+    if hours < 1:
+        return f"{int(hours * 60)}m"
+    return f"{int(hours)}h{int((hours % 1) * 60):02d}m"
+
+
+def shortfall(sf) -> None:
+    """Say exactly how short the run is. Never silently serve fewer."""
+    if sf.served == 0:
+        head = c(f"nothing to serve (asked for {sf.requested})", YELLOW)
+    elif sf.short:
+        head = c(f"served {sf.served} of {sf.requested} · {sf.short} short", YELLOW)
+    else:
+        return
+    tail = ""
+    if sf.in_cooldown:
+        tail = f" · {sf.in_cooldown} in cooldown"
+        if sf.next_free_in is not None:
+            tail += f" · soonest in {_fmt_hours(sf.next_free_in)} ({sf.next_free_tier})"
+    out(head + tail)
+
+
+def question(item, index: int, total: int) -> None:
+    out()
+    out(f"{c(f'[{index}/{total}]', DIM)} {c(item.qid, BOLD)} {c('· obj ' + item.obj, DIM)}")
+    out()
+    for line in _wrap(item.stem):
+        out(f"  {line}")
+    out()
+    verb = f"Select {item.select_n}." if item.is_multiple_response else "Select 1."
+    out(f"  {c(verb, DIM)}")
+    out()
+    for o in item.options:
+        for i, line in enumerate(_wrap(o.text, width=88)):
+            out(f"    {o.key})  {line}" if i == 0 else f"        {line}")
+    out()
+
+
+def _wrap(text: str, width: int = 92) -> list[str]:
+    words, lines, cur = text.split(), [], ""
+    for w in words:
+        if cur and len(cur) + 1 + len(w) > width:
+            lines.append(cur)
+            cur = w
+        else:
+            cur = f"{cur} {w}".strip()
+    if cur:
+        lines.append(cur)
+    return lines or [""]
+
+
+def ask_answer(item) -> frozenset[str] | None:
+    """Returns the chosen keys, or None if the user quit."""
+    valid = {o.key.upper() for o in item.options}
+    want = item.select_n
+    prompt = "answer" if want == 1 else f"answer (choose {want}, e.g. a,c)"
+    while True:
+        try:
+            raw = input(f"  {c(prompt + '>', BOLD)} ").strip()
+        except EOFError:
+            return None
+        if raw.lower() in {"q", "quit"}:
+            return None
+        chosen = frozenset(p.strip().upper() for p in raw.replace(" ", ",").split(",") if p.strip())
+        if not chosen:
+            continue
+        if not chosen <= valid:
+            out(f"  {c('unknown option(s): ' + ', '.join(sorted(chosen - valid)), YELLOW)}")
+            continue
+        if len(chosen) != want:
+            out(f"  {c(f'pick exactly {want}', YELLOW)}")
+            continue
+        return chosen
+
+
+def ask_confidence() -> str | None:
+    """Asked before the answer is revealed -- never after."""
+    mapping = {"s": "sure", "u": "unsure", "g": "guess"}
+    while True:
+        try:
+            raw = input(f"  {c('confidence (s)ure / (u)nsure / (g)uess>', BOLD)} ").strip().lower()
+        except EOFError:
+            return None
+        if raw in {"q", "quit"}:
+            return None
+        if raw in mapping:
+            return mapping[raw]
+        if raw in mapping.values():
+            return raw
+
+
+def reveal(item, chosen: frozenset[str], correct: bool) -> None:
+    out()
+    keys = ", ".join(sorted(item.correct_keys))
+    if correct:
+        out(f"  {c('correct', GREEN)}")
+    else:
+        out(f"  {c('incorrect', RED)} — answer: {c(keys, BOLD)}")
+        if item.is_multiple_response:
+            out(f"  {c('multiple-response items score all-or-nothing', DIM)}")
+    out(f"  {c('principle:', DIM)} {item.principle}")
+    out()
+    for o in item.options:
+        mark = "✓" if o.correct else " "
+        picked = "←" if o.key.upper() in chosen else " "
+        colour = GREEN if o.correct else DIM
+        head = c(f"  {mark} {picked} {o.key})", colour)
+        for i, line in enumerate(_wrap(o.rationale, width=84)):
+            out(f"{head} {line}" if i == 0 else f"         {line}")
+
+
+def session_summary(mode: str, results: list[tuple[str, bool, str]]) -> None:
+    out()
+    if not results:
+        out(c("no items answered", DIM))
+        return
+    n = len(results)
+    right = sum(1 for _, ok, _ in results if ok)
+    sure_right = sum(1 for _, ok, conf in results if ok and conf == "sure")
+    out(c("─" * 60, DIM))
+    out(f"{c(mode, BOLD)}  {right}/{n} correct ({right / n:.0%})  ·  "
+        f"{sure_right} confident-correct")
+    missed = [q for q, ok, _ in results if not ok]
+    if missed:
+        out(f"{c('missed:', DIM)} {' '.join(missed)}")
