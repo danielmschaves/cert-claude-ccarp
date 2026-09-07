@@ -120,6 +120,7 @@ uv run ccarp drill [-n 20] [--domain d3] [--obj 3.5]
 uv run ccarp stats [--by-objective]
 uv run ccarp exam --timed
 uv run ccarp review --wrong
+uv run ccarp report [--markdown]  # bank composition and quality tells; --markdown feeds CI
 ```
 
 `validate` exits 1 on structural error, 0 on lint warns, and must pass on empty banks.
@@ -137,13 +138,11 @@ that is inferior *in this scenario*.
 ## Build state
 
 M1 `validate` ✅ · M2 `drill` ✅ (full 5-tier ladder) · A0 CI + `report` ✅ · A1 `stats` +
-`review --wrong` ✅ · A2 `lint` ✅ · A3 `exam --timed` ✅ · then six authoring branches.
+`review --wrong` ✅ · A2 `lint` ✅ · A3 `exam --timed` ✅ · six authoring branches ✅.
 
-`exam` refuses to start until every domain meets its blueprint quota, so it stays blocked
-until the authoring branches land. That is deliberate: a 58-item mock is not a mock.
-
-Banks: **d1 has 10 items; d2–d7 are empty.** Authoring the remaining six domains is the
-long pole, and `validate` reports the per-domain gap on every run.
+**The bank is complete: 63/63 items, all 38 objectives covered, `exam-ready yes`.** Further
+authoring is depth, not coverage — the tiers need roughly three times the blueprint (~189
+items) before `unseen` survives more than a couple of runs.
 
 ## Conventions
 
