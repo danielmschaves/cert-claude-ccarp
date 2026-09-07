@@ -61,6 +61,11 @@ older `rev` still count for coverage but no longer count toward mastery.
 
 ## Authoring rules
 
+**Before writing any item, read `authoring/SPEC.md`** — it carries the pre-flight, worked
+examples of good and bad distractors, and the failure modes this bank has actually suffered.
+Start from `ccarp new-item --obj X.Y`: it allocates the next qid and proposes the least-used
+answer key, which is the defect that got past review the first time.
+
 - 2–3 sentences of **concrete situation**. A named system, a real constraint. No abstractions.
 - **Superlative stem**: "best reduces", "most likely first place to investigate". The task is
   ranking real options, not recalling a fact.
@@ -121,6 +126,7 @@ uv run ccarp stats [--by-objective]
 uv run ccarp exam --timed
 uv run ccarp review --wrong
 uv run ccarp report [--markdown]  # bank composition and quality tells; --markdown feeds CI
+uv run ccarp new-item --obj 3.5   # skeleton for a new item, with qid and answer key chosen
 ```
 
 `validate` exits 1 on structural error, 0 on lint warns, and must pass on empty banks.

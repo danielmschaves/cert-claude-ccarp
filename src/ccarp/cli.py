@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from datetime import UTC, datetime
 
 from . import bank as bank_mod
 from . import blueprint as blueprint_mod
-from . import models, render, report, runner, scoring, selection, stats, timer, validate
+from . import models, render, report, runner, scaffold, scoring, selection, stats, timer, validate
 from . import progress as progress_mod
 from .config import DEFAULT_DRILL_N
 
@@ -118,6 +119,25 @@ def _cmd_exam(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_new_item(args: argparse.Namespace) -> int:
+    """Emits a skeleton; never writes to banks/. JSON on stdout, guidance on stderr."""
+    bp = blueprint_mod.load()
+    if args.obj not in bp.objective_ids:
+        render.err(f"unknown objective {args.obj!r} -- see blueprint.json")
+        return 1
+    if args.format == "multiple_response" and args.select_n < 2:
+        render.err("multiple_response needs --select-n 2 or more")
+        return 1
+
+    items, guidance = scaffold.build(
+        bp, bank_mod.load(), args.obj, count=args.count,
+        n_options=args.options, fmt=args.format, select_n=args.select_n,
+    )
+    render.scaffold_guidance(guidance, len(items))
+    render.out(json.dumps(items if len(items) > 1 else items[0], indent=2))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="ccarp",
@@ -130,6 +150,16 @@ def build_parser() -> argparse.ArgumentParser:
         "--strict", action="store_true",
         help="treat authoring warnings as errors (what CI gates on)")
     p_validate.set_defaults(func=_cmd_validate)
+
+    p_new = sub.add_parser("new-item", help="print a correctly-shaped skeleton for a new item")
+    p_new.add_argument("--obj", required=True, help="objective the item tests, e.g. 3.5")
+    p_new.add_argument("--count", type=int, default=1, help="how many skeletons")
+    p_new.add_argument("--options", type=int, default=4, choices=range(3, 6),
+                       help="options per item (3-5)")
+    p_new.add_argument("--format", default="multiple_choice",
+                       choices=["multiple_choice", "multiple_response"])
+    p_new.add_argument("--select-n", type=int, default=1, help="correct options (MR only)")
+    p_new.set_defaults(func=_cmd_new_item)
 
     p_report = sub.add_parser("report", help="bank composition and quality tells")
     p_report.add_argument("--markdown", action="store_true", help="emit a markdown table")

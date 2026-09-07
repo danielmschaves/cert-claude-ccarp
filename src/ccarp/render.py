@@ -338,3 +338,22 @@ def exam_start(count: int, minutes: int | None) -> None:
     out()
     out(f"{c('exam', BOLD)}  {count} items · {clock} · answers revealed at the end")
     out(c("  q to stop early; unanswered items are scored incorrect", DIM))
+
+
+def scaffold_guidance(g, count: int) -> None:
+    """Pre-flight for the author. Goes to stderr so the JSON on stdout stays pipeable."""
+    err(f"{c(g.domain_id, BOLD)}  {g.have}/{g.need} items"
+        + ("" if g.have >= g.need else c(f"  ({g.need - g.have} short)", YELLOW)))
+    if g.key_counts:
+        keys = " ".join(f"{k}:{n}" for k, n in sorted(g.key_counts.items()))
+        err(f"  {c('answer keys so far', DIM)}  {keys}")
+        err(f"  {c('suggested key for a new item', DIM)}  "
+            f"{c(g.suggested_keys[0], GREEN)}"
+            f"{c(' (least used; the skeleton already marks it correct)', DIM)}")
+    if g.longest_share > 0.4:
+        err(c(f"  the correct option is longest in {g.longest_share:.0%} of this domain -- "
+              f"keep the new one no longer than its distractors", YELLOW))
+    if g.uncovered:
+        err(c(f"  objectives with no items yet: {', '.join(g.uncovered)}", YELLOW))
+    err(c(f"  writing {count} item(s); see authoring/SPEC.md before you start", DIM))
+    err("")
