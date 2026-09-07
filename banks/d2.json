@@ -1,4 +1,291 @@
 {
   "domain": "d2",
-  "items": []
+  "items": [
+    {
+      "qid": "d2-001",
+      "obj": "2.1",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A pipeline sorts incoming tickets into a dozen well-defined categories before routing them. Volume is high, the labels are unambiguous, and users experience the routing as part of page load. Which model choice best fits this stage?",
+      "principle": "match model capability to task difficulty, not to ambition",
+      "options": [
+        {
+          "key": "A",
+          "text": "The fastest small model, with a few-shot prompt and an eval set",
+          "correct": true,
+          "rationale": "The task is easy and well-specified, and the binding constraint is latency at volume. Capability beyond what the labels demand buys nothing here and is paid for on every single request."
+        },
+        {
+          "key": "B",
+          "text": "The frontier reasoning model, for the best accuracy available",
+          "correct": false,
+          "rationale": "Defensible when a misclassification is expensive, and it will score well. On unambiguous labels the accuracy gain is small and the latency cost lands on every user."
+        },
+        {
+          "key": "C",
+          "text": "A mid-tier model with extended thinking enabled on each call",
+          "correct": false,
+          "rationale": "A sensible middle for genuinely hard judgements. Thinking time is the wrong thing to buy for a task whose difficulty is in throughput rather than reasoning."
+        },
+        {
+          "key": "D",
+          "text": "The frontier model now, with a plan to distil it down later",
+          "correct": false,
+          "rationale": "A common and often sound sequencing when the task is not yet understood. Here the task is understood, so the plan defers a decision you can already make correctly."
+        }
+      ]
+    },
+    {
+      "qid": "d2-002",
+      "obj": "2.1",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "An assistant drafts summaries of contracts where a subtle misreading carries real legal cost, and volume is low. The team runs the fastest small model everywhere and is seeing reasoning errors in this step. What best addresses the problem?",
+      "principle": "spend capability where errors are expensive, not uniformly",
+      "options": [
+        {
+          "key": "A",
+          "text": "Add more few-shot examples of good summaries to the prompt",
+          "correct": false,
+          "rationale": "Few-shot reliably fixes format and style, and costs almost nothing to try. The failures described are errors of reasoning about the source, which examples of good output do not teach."
+        },
+        {
+          "key": "B",
+          "text": "Chain two calls to the same model and compare their outputs",
+          "correct": false,
+          "rationale": "Self-consistency is a real technique and can catch unstable answers. Two runs of a model that misreads the contract tend to misread it the same way."
+        },
+        {
+          "key": "C",
+          "text": "Move this step to a frontier reasoning model, leaving the rest",
+          "correct": true,
+          "rationale": "The cost of an error here is high and the volume is low, which is exactly when paying for capability is correct. Moving one step keeps the economics of the rest intact."
+        },
+        {
+          "key": "D",
+          "text": "Increase retrieval depth so more of the contract reaches the model",
+          "correct": false,
+          "rationale": "Worth checking, since a truncated source would produce these symptoms. Nothing suggests the model lacks the text; it is misreading the text it has."
+        }
+      ]
+    },
+    {
+      "qid": "d2-003",
+      "obj": "2.2",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A support assistant occasionally volunteers comparisons with competitor products, which the business does not want it doing. The behaviour shows up in a small share of conversations and is otherwise unremarkable. Which change best constrains it?",
+      "principle": "state the boundary where the model reads it, before generation",
+      "options": [
+        {
+          "key": "A",
+          "text": "Filter replies after generation and block ones naming competitors",
+          "correct": false,
+          "rationale": "A real safety net and sometimes a required one. It catches the output after the model has already decided to go there, so the user sees a refusal or a gap rather than a good answer."
+        },
+        {
+          "key": "B",
+          "text": "State the scope boundary and the refusal behaviour in the system prompt",
+          "correct": true,
+          "rationale": "The system prompt is where durable behavioural constraints belong: read before every generation, applying to cases nobody enumerated, and cheap to audit when the policy changes."
+        },
+        {
+          "key": "C",
+          "text": "Add few-shot examples of the assistant declining these questions",
+          "correct": false,
+          "rationale": "Examples do shape behaviour and would help on cases resembling them. They generalise less reliably than a stated rule, and this behaviour appears in situations nobody has collected yet."
+        },
+        {
+          "key": "D",
+          "text": "Lower the sampling temperature so replies stay closer to the script",
+          "correct": false,
+          "rationale": "Reduces variance, which plausibly reduces the stray comparisons. It constrains how far the model wanders without ever telling it where the boundary is."
+        }
+      ]
+    },
+    {
+      "qid": "d2-004",
+      "obj": "2.2",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A system prompt has grown to cover tone, output format, scope, escalation, and a long tail of edge cases. New instructions increasingly contradict older ones and behaviour has become hard to predict. What best improves this?",
+      "principle": "a system prompt needs structure and stated precedence, not only content",
+      "options": [
+        {
+          "key": "A",
+          "text": "Move the edge cases out of instructions and into few-shot examples",
+          "correct": false,
+          "rationale": "Sound instinct: examples carry edge cases better than prose. It shrinks the prompt without resolving which instruction wins when two still disagree."
+        },
+        {
+          "key": "B",
+          "text": "Split the prompt across several calls, one concern handled per call",
+          "correct": false,
+          "rationale": "Genuinely reduces per-call complexity and is right when concerns are separable. Here it multiplies calls and latency for what is a single response."
+        },
+        {
+          "key": "C",
+          "text": "Reorder the prompt so the newest instructions appear last and win",
+          "correct": false,
+          "rationale": "Recency does carry weight, so this often appears to work. It encodes precedence implicitly in line order, which is the property that made the prompt unpredictable."
+        },
+        {
+          "key": "D",
+          "text": "Restructure into ordered sections with precedence stated explicitly",
+          "correct": true,
+          "rationale": "Contradiction is the symptom; unstated precedence is the cause. Sections with an explicit priority make conflicts resolvable by reading rather than by experiment."
+        }
+      ]
+    },
+    {
+      "qid": "d2-005",
+      "obj": "2.3",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A model extracts structured fields from invoices whose layouts vary between suppliers. Zero-shot output is mostly correct but writes dates in whatever format the invoice used. Which technique best fixes this?",
+      "principle": "few-shot for format, chain-of-thought for reasoning",
+      "options": [
+        {
+          "key": "A",
+          "text": "Add few-shot examples showing the exact date format expected",
+          "correct": true,
+          "rationale": "Format is the canonical few-shot target: showing two or three worked examples communicates a convention faster and more reliably than describing it, and the model is already extracting the right values."
+        },
+        {
+          "key": "B",
+          "text": "Add a chain-of-thought instruction before the extraction step",
+          "correct": false,
+          "rationale": "Reasoning aloud helps when the answer requires weighing something. The extraction is already correct, so the added tokens buy nothing the output needs."
+        },
+        {
+          "key": "C",
+          "text": "Move the extraction to a more capable model for this step",
+          "correct": false,
+          "rationale": "Would likely improve consistency, and is the right call when a task exceeds a model's reach. This one does not: the values are right and only their formatting varies."
+        },
+        {
+          "key": "D",
+          "text": "Describe the required date format in more precise written rules",
+          "correct": false,
+          "rationale": "Often works and keeps the prompt short. Formats are awkward to specify exhaustively in prose, and each new supplier layout tends to expose another unwritten case."
+        }
+      ]
+    },
+    {
+      "qid": "d2-006",
+      "obj": "2.3",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "An assistant judges whether a transaction is fraudulent by weighing several partially conflicting signals. It answers immediately and is wrong in ways the team cannot reconstruct afterwards. Which change best improves this?",
+      "principle": "chain-of-thought where the answer requires weighing rather than recall",
+      "options": [
+        {
+          "key": "A",
+          "text": "Add few-shot examples of correctly classified past transactions",
+          "correct": false,
+          "rationale": "Useful for calibrating what a positive looks like and worth having. Examples teach the shape of an answer, not the act of weighing signals that point different ways."
+        },
+        {
+          "key": "B",
+          "text": "Split each signal into its own call and combine the verdicts after",
+          "correct": false,
+          "rationale": "Makes each judgement simpler and independently inspectable. Splitting removes the cross-signal weighing that is the actual task, so the combination step inherits the whole problem."
+        },
+        {
+          "key": "C",
+          "text": "Prompt the model to reason through the signals before deciding",
+          "correct": true,
+          "rationale": "The task is exactly what chain-of-thought is for: a judgement that depends on trading off evidence. It also leaves the reasoning on the record, which is the second half of what the team is missing."
+        },
+        {
+          "key": "D",
+          "text": "Return a confidence score alongside each fraud determination",
+          "correct": false,
+          "rationale": "Genuinely valuable for routing borderline cases to a human. It reports how sure the model is without improving or explaining how it decided."
+        }
+      ]
+    },
+    {
+      "qid": "d2-007",
+      "obj": "2.4",
+      "rev": 1,
+      "format": "multiple_response",
+      "select_n": 2,
+      "stem": "An agent's context fills with complete tool outputs from earlier steps, and later steps degrade as older content crowds them out. The team wants the agent's reach left unchanged. Which two changes best help?",
+      "principle": "keep what the next step needs in context, not everything that has happened",
+      "options": [
+        {
+          "key": "A",
+          "text": "Switch to a model with a larger context window",
+          "correct": false,
+          "rationale": "Buys headroom immediately and is often the pragmatic move. It raises the ceiling without changing the growth rate, so a longer run reaches the same failure."
+        },
+        {
+          "key": "B",
+          "text": "Summarise older tool results once they are no longer load-bearing",
+          "correct": true,
+          "rationale": "Trades detail nobody will use again for room the next step does need. This is the compaction that keeps a long-running agent coherent."
+        },
+        {
+          "key": "C",
+          "text": "Reduce the number of tools the agent is given access to",
+          "correct": false,
+          "rationale": "A real fix for capability bloat, and it does shrink the tool definitions. The problem described is accumulated results rather than available tools."
+        },
+        {
+          "key": "D",
+          "text": "Return tool results by reference, fetching detail only when needed",
+          "correct": true,
+          "rationale": "Stops the context growing with every call in the first place. Progressive disclosure keeps reach unchanged while the agent pays only for what it opens."
+        },
+        {
+          "key": "E",
+          "text": "Lower the temperature so that responses come back shorter",
+          "correct": false,
+          "rationale": "May trim some verbosity at the margin. Temperature governs how the model chooses tokens, not how much tool output it accumulates."
+        }
+      ]
+    },
+    {
+      "qid": "d2-008",
+      "obj": "2.5",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "Five teams maintain their own copies of a long shared system prompt for one assistant, and fixes land in some copies but not others. Inference costs are also higher than the team expected. What best addresses both problems?",
+      "principle": "modular prompts plus caching: define once, pay for it once",
+      "options": [
+        {
+          "key": "A",
+          "text": "Publish a style guide describing what the shared prompt should say",
+          "correct": false,
+          "rationale": "Helps new teams write consistent prompts and is cheap to produce. Documentation does not converge five copies that have already diverged, and changes nothing about cost."
+        },
+        {
+          "key": "B",
+          "text": "Nominate one team as owner and have it review the others' changes",
+          "correct": false,
+          "rationale": "Real governance, and it would slow the divergence considerably. It adds a human in the path of every change while the five copies, and the repeated tokens, remain."
+        },
+        {
+          "key": "C",
+          "text": "Extract one shared prompt module and cache the stable prefix",
+          "correct": true,
+          "rationale": "One definition removes the divergence at its source, and a cached stable prefix is what turns the shared text from a cost repeated per call into one paid rarely."
+        },
+        {
+          "key": "D",
+          "text": "Fold the shared instructions into each team's few-shot examples",
+          "correct": false,
+          "rationale": "Moves the text somewhere it demonstrably shapes behaviour. It copies the shared content into five more places, making both the drift and the token cost worse."
+        }
+      ]
+    }
+  ]
 }
