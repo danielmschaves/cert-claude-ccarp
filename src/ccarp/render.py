@@ -187,3 +187,59 @@ def session_summary(mode: str, results: list[tuple[str, bool, str]]) -> None:
     missed = [q for q, ok, _ in results if not ok]
     if missed:
         out(f"{c('missed:', DIM)} {' '.join(missed)}")
+
+
+def _bar(have: int, need: int, width: int = 12) -> str:
+    filled = min(width, round(width * have / need)) if need else width
+    return "█" * filled + "·" * (width - filled)
+
+
+def bank_report(reports: list) -> None:
+    total_have = sum(r.have for r in reports)
+    total_need = sum(r.need for r in reports)
+    out(f"{c('bank', BOLD)}  {total_have}/{total_need} items")
+    out()
+    for r in reports:
+        state = c("ok", GREEN) if r.complete else c(f"{r.need - r.have} short", YELLOW)
+        out(f"  {c(r.domain_id, BOLD)} {_bar(r.have, r.need)} {r.have:>2}/{r.need:<2} {state}"
+            f"   {c(r.name, DIM)}")
+        if r.have:
+            objs = f"obj {r.objectives_covered}/{r.objectives_total}"
+            if r.uncovered:
+                objs += c(f" (missing {', '.join(r.uncovered)})", YELLOW)
+            keys = " ".join(f"{k}:{n}" for k, n in sorted(r.key_counts.items()))
+            out(f"      {c(objs, DIM)}  {c('keys ' + keys, DIM)}  "
+                f"{c(f'longest-correct {r.longest_share:.0%}', DIM)}  "
+                f"{c(f'MR {r.multiple_response}', DIM)}")
+    out()
+
+
+def bank_report_markdown(reports: list) -> None:
+    """Rendered into the CI job summary so quality is visible on the PR page."""
+    total_have = sum(r.have for r in reports)
+    total_need = sum(r.need for r in reports)
+    out(f"## Bank report — {total_have}/{total_need} items\n")
+    out("| domain | items | objectives | answer keys | correct-is-longest | MR | top principle |")
+    out("|---|---|---|---|---|---|---|")
+    for r in reports:
+        items = f"{r.have}/{r.need}" + ("" if r.complete else f" ⚠️ {r.need - r.have} short")
+        objs = f"{r.objectives_covered}/{r.objectives_total}"
+        if r.uncovered:
+            objs += f" ⚠️ missing {', '.join(r.uncovered)}"
+        keys = " ".join(f"{k}:{n}" for k, n in sorted(r.key_counts.items())) or "—"
+        if r.have and r.key_skew > 0.4:
+            keys += f" ⚠️ {r.key_skew:.0%} on one key"
+        longest = f"{r.longest_share:.0%}" if r.have else "—"
+        if r.have and r.longest_share > 0.5:
+            longest += " ⚠️"
+        principle = "—"
+        if r.top_principle:
+            principle = f"{r.principle_share:.0%} share"
+            if r.principle_share > 0.34:
+                principle += " ⚠️"
+        out(f"| `{r.domain_id}` | {items} | {objs} | {keys} | {longest} | {r.multiple_response} "
+            f"| {principle} |")
+    out()
+    out("⚠️ marks a distribution tell worth a look, not a failure: answer keys clustered on one "
+        "letter, the correct option being the longest too often, or one principle carrying too "
+        "much of a domain. See `CLAUDE.md` for the authoring rules.")
