@@ -120,6 +120,7 @@ uv run ccarp drill [-n 20] [--domain d3] [--obj 3.5]
 uv run ccarp stats [--by-objective]
 uv run ccarp exam --timed
 uv run ccarp review --wrong
+uv run ccarp report [--markdown]  # bank composition and quality tells; --markdown feeds CI
 ```
 
 `validate` exits 1 on structural error, 0 on lint warns, and must pass on empty banks.
@@ -142,9 +143,6 @@ M1 `validate` ✅ · M2 `drill` ✅ (full 5-tier ladder) · A0 CI + `report` ✅
 **The bank is complete: 63/63 items, all 38 objectives covered, `exam-ready yes`.** Further
 authoring is depth, not coverage — the tiers need roughly three times the blueprint (~189
 items) before `unseen` survives more than a couple of runs.
-
-Banks: **d1 has 10 items; d2–d7 are empty.** Authoring the remaining six domains is the
-long pole, and `validate` reports the per-domain gap on every run.
 
 ## Conventions
 
