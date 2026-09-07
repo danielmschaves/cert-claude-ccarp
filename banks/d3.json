@@ -1,4 +1,431 @@
 {
   "domain": "d3",
-  "items": []
+  "items": [
+    {
+      "qid": "d3-001",
+      "obj": "3.1",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "An agent has accumulated some thirty tools as teams added their own, and it now picks the wrong one on tasks it used to handle. No individual tool is broken or badly described. What best addresses this?",
+      "principle": "capability bloat: selection accuracy falls as the option set grows",
+      "options": [
+        {
+          "key": "A",
+          "text": "Rewrite the descriptions to be more precise and mutually distinct",
+          "correct": false,
+          "rationale": "Good hygiene that genuinely reduces confusion between neighbouring tools. It sharpens each choice without reducing how many choices there are, which is what changed."
+        },
+        {
+          "key": "B",
+          "text": "Scope each agent to the tools its task needs and split the rest out",
+          "correct": true,
+          "rationale": "Selection is a discrimination problem, and it degrades as the option set grows even when every option is well described. Shrinking the set is the change that addresses the cause rather than the symptom."
+        },
+        {
+          "key": "C",
+          "text": "Move to a more capable model that copes with large tool sets better",
+          "correct": false,
+          "rationale": "A stronger model does select better, so this will show real improvement. It buys headroom against a set that is still growing, and pays for that on every call."
+        },
+        {
+          "key": "D",
+          "text": "Add a planning step where the agent shortlists tools before acting",
+          "correct": false,
+          "rationale": "Explicit planning helps on genuinely complex tasks and makes the choice inspectable. The agent is still choosing from thirty, now with an extra call in front."
+        }
+      ]
+    },
+    {
+      "qid": "d3-002",
+      "obj": "3.1",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A team is designing an expense-approval agent and wants it future-proofed, so they plan to give it every finance API the company exposes. The approval task itself touches three of them. What best guides the tool set?",
+      "principle": "least capability: add tools when a task demands them, not in advance",
+      "options": [
+        {
+          "key": "A",
+          "text": "Include them all, documenting which ones matter for approvals",
+          "correct": false,
+          "rationale": "Keeps the door open for future tasks and the documentation is genuinely useful to maintainers. Documentation is read by people; the agent still sees every tool."
+        },
+        {
+          "key": "B",
+          "text": "Include them all and rely on the system prompt to narrow usage",
+          "correct": false,
+          "rationale": "Instructions do steer selection and this is cheap to write. It asks the prompt to undo at generation time a problem the configuration created."
+        },
+        {
+          "key": "C",
+          "text": "Give it the three the task needs, adding others as tasks require",
+          "correct": true,
+          "rationale": "Capability is not free: every unused tool is selection surface and attack surface. Adding on demand keeps both minimal and costs nothing that cannot be recovered later."
+        },
+        {
+          "key": "D",
+          "text": "Include the read-only APIs broadly and restrict only the writes",
+          "correct": false,
+          "rationale": "A sensible risk split that does bound the damage a mistake can do. Read-only tools still enlarge the selection problem, and reading is where data exposure happens."
+        }
+      ]
+    },
+    {
+      "qid": "d3-003",
+      "obj": "3.2",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "An agent calls internal services with a single service account holding the union of every permission any user might need. Users reach it through a front end that authenticates them correctly. What is the most significant risk here?",
+      "principle": "authorise as the user, not as the application",
+      "options": [
+        {
+          "key": "A",
+          "text": "The shared service credential could be exfiltrated via the agent",
+          "correct": false,
+          "rationale": "A real concern with any powerful credential, and worth mitigating. It describes an attack that has to succeed first, rather than what the design already permits."
+        },
+        {
+          "key": "B",
+          "text": "Requests cannot be attributed to individual users when audited",
+          "correct": false,
+          "rationale": "True, and a genuine compliance problem in regulated settings. Attribution is about reconstructing what happened; something worse is possible while it happens."
+        },
+        {
+          "key": "C",
+          "text": "The agent may exhaust rate limits that all users share between them",
+          "correct": false,
+          "rationale": "A real operational consequence of one account fronting everyone. It degrades service rather than exposing anything."
+        },
+        {
+          "key": "D",
+          "text": "Any user can reach data their own permissions would have denied",
+          "correct": true,
+          "rationale": "Authenticating the user and then acting with a superset of their rights is the confused deputy: the front door is locked and the agent walks around it, by design rather than by accident."
+        }
+      ]
+    },
+    {
+      "qid": "d3-004",
+      "obj": "3.2",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "An MCP server exposes company tools to an assistant using long-lived tokens shared across every environment. A contractor's laptop is compromised. Which change most reduces the blast radius?",
+      "principle": "scope and expiry bound the blast radius; rotation only shortens it",
+      "options": [
+        {
+          "key": "A",
+          "text": "Scope tokens per user and environment, with a short expiry",
+          "correct": true,
+          "rationale": "Narrow scope bounds what a stolen token can reach and short expiry bounds how long, so the two together turn a company-wide compromise into a contained one."
+        },
+        {
+          "key": "B",
+          "text": "Rotate the shared token on a schedule and after any incident",
+          "correct": false,
+          "rationale": "Genuinely limits exposure over time and is standard practice. Between rotations the stolen token still opens everything, in every environment."
+        },
+        {
+          "key": "C",
+          "text": "Restrict the MCP server to an allowlist of source addresses",
+          "correct": false,
+          "rationale": "A real control that stops use from unexpected networks. A compromised laptop is very often on an expected network."
+        },
+        {
+          "key": "D",
+          "text": "Log every tool invocation with the calling identity attached",
+          "correct": false,
+          "rationale": "Essential for detection and for knowing afterwards what was touched. Logging observes the breach; it does not narrow it."
+        }
+      ]
+    },
+    {
+      "qid": "d3-005",
+      "obj": "3.3",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A search assistant reranks several dozen candidates with a model call before answering, and users abandon it during the wait. Relevance is good for those who stay. What best resolves the trade-off?",
+      "principle": "spend latency where it changes the answer",
+      "options": [
+        {
+          "key": "A",
+          "text": "Rerank with the fastest small model, accepting slightly worse order",
+          "correct": false,
+          "rationale": "A reasonable trade and often the right one. It reduces the cost of each comparison while still paying for comparisons that were never going to change the outcome."
+        },
+        {
+          "key": "B",
+          "text": "Rerank only the few candidates cheap retrieval already ranked highest",
+          "correct": true,
+          "rationale": "The tail of the candidate list almost never becomes the answer, so scoring it is latency spent where it cannot change the result. Cutting there costs relevance you were not getting."
+        },
+        {
+          "key": "C",
+          "text": "Cache reranked results so repeat queries skip the model call",
+          "correct": false,
+          "rationale": "Real and worthwhile if queries repeat. It does nothing for the first user to ask anything, which is who is abandoning."
+        },
+        {
+          "key": "D",
+          "text": "Show a progress indicator so the wait feels shorter than it is",
+          "correct": false,
+          "rationale": "Perceived latency is real and this genuinely helps retention a little. The work being waited on is still work that did not need doing."
+        }
+      ]
+    },
+    {
+      "qid": "d3-006",
+      "obj": "3.4",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A multi-step agent fails for a small share of users and the team cannot reproduce it. Logs hold every model call's prompt and response, but nothing ties the calls of one run together. What is the most useful first addition?",
+      "principle": "observability at scale starts with correlation, not with volume",
+      "options": [
+        {
+          "key": "A",
+          "text": "Log complete tool outputs beside each model call in the trace",
+          "correct": false,
+          "rationale": "More context per call, and often exactly what you want later. Without a way to gather one run's calls, it makes a larger pile of the same unsorted evidence."
+        },
+        {
+          "key": "B",
+          "text": "Raise the log level so more detail is captured on every call",
+          "correct": false,
+          "rationale": "The reflex when something is invisible, and sometimes correct. At scale it multiplies volume and cost while leaving the runs just as tangled."
+        },
+        {
+          "key": "C",
+          "text": "Attach a trace id linking every call belonging to one agent run",
+          "correct": true,
+          "rationale": "A failure in a multi-step agent is a property of the run, not of any single call. Correlation is what turns the logs you already have into the story you are missing."
+        },
+        {
+          "key": "D",
+          "text": "Sample and store full transcripts for a fraction of all runs",
+          "correct": false,
+          "rationale": "A strong technique that bounds cost while keeping deep evidence. Sampling a small share of runs is a poor way to catch a failure that affects a small share of runs."
+        }
+      ]
+    },
+    {
+      "qid": "d3-007",
+      "obj": "3.5",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A retrieval system over policy documents returns passages that start mid-clause and omit the conditions qualifying them. Chunks are a fixed length with no overlap. What best improves answer quality?",
+      "principle": "chunk on meaning boundaries, not on length",
+      "options": [
+        {
+          "key": "A",
+          "text": "Chunk on document structure so each piece is a whole provision",
+          "correct": true,
+          "rationale": "The retrieved unit should be a unit of meaning, because that is what an answer has to stand on. Structural chunking makes truncated clauses impossible rather than less likely."
+        },
+        {
+          "key": "B",
+          "text": "Increase the chunk length so more surrounding text comes along",
+          "correct": false,
+          "rationale": "Fewer clauses will be cut, and it takes one line to change. Fixed boundaries still fall mid-provision, just less often and with more irrelevant text attached."
+        },
+        {
+          "key": "C",
+          "text": "Add overlap between adjacent chunks to preserve boundary context",
+          "correct": false,
+          "rationale": "Standard practice that genuinely rescues text near a boundary. It patches the seams of an arbitrary split rather than splitting where the document already divides."
+        },
+        {
+          "key": "D",
+          "text": "Retrieve more chunks per query so missing conditions turn up too",
+          "correct": false,
+          "rationale": "Often works, since the qualifying text is usually adjacent. It relies on the answer being reassembled by luck, and spends context to do it."
+        }
+      ]
+    },
+    {
+      "qid": "d3-008",
+      "obj": "3.5",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A knowledge base holds short FAQ entries and long technical manuals in a single index, chunked identically. FAQ answers are now diluted by manual passages sharing their vocabulary. What best addresses this?",
+      "principle": "index by data shape; one index for two shapes serves neither",
+      "options": [
+        {
+          "key": "A",
+          "text": "Raise the similarity threshold so weaker matches are excluded",
+          "correct": false,
+          "rationale": "Cuts obvious noise and is quick to tune. The competing manual passages are genuinely similar, so they survive the threshold while thin FAQ matches may not."
+        },
+        {
+          "key": "B",
+          "text": "Rerank the results with a model call before they reach the answer",
+          "correct": false,
+          "rationale": "Reranking is the standard fix for good-recall-poor-precision and would help here. It pays a call on every query to compensate for an index that mixes two shapes."
+        },
+        {
+          "key": "C",
+          "text": "Chunk the manuals more finely so their passages score lower",
+          "correct": false,
+          "rationale": "Changes the balance and is worth trying. Finer manual chunks are more numerous, so the FAQ entries end up competing with more rivals rather than fewer."
+        },
+        {
+          "key": "D",
+          "text": "Index the two corpora separately and route the query to one",
+          "correct": true,
+          "rationale": "Short answers and long reference text have different retrieval characteristics, so one index cannot be tuned for both. Separating them lets each be tuned for what it is."
+        }
+      ]
+    },
+    {
+      "qid": "d3-009",
+      "obj": "3.6",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "Users ask an assistant things like which orders shipped late last month, over a relational order database. The team has embedded row summaries into a vector store. Which approach best fits these queries?",
+      "principle": "match retrieval to the query pattern: aggregation wants a query, not similarity",
+      "options": [
+        {
+          "key": "A",
+          "text": "Improve the row summaries so embeddings capture more of the fields",
+          "correct": false,
+          "rationale": "Richer summaries do retrieve better and cost little to regenerate. Similarity search cannot count, filter by date range, or guarantee it found every late order."
+        },
+        {
+          "key": "B",
+          "text": "Generate a database query and return the result set it produces",
+          "correct": true,
+          "rationale": "The question is an aggregation over structured data with a single correct answer. Retrieval by similarity returns things that resemble the question; a query returns the orders that are actually late."
+        },
+        {
+          "key": "C",
+          "text": "Retrieve many more rows per question and let the model filter",
+          "correct": false,
+          "rationale": "Sometimes adequate for small tables, and simple to implement. Completeness depends on the cut-off, so the answer is right only when the retrieved window happened to hold every match."
+        },
+        {
+          "key": "D",
+          "text": "Add metadata filters for date and status to the vector search",
+          "correct": false,
+          "rationale": "A real improvement that hybrid retrieval systems rely on heavily. Filters narrow the candidates but the ranking within them is still similarity, which is not what a complete list requires."
+        }
+      ]
+    },
+    {
+      "qid": "d3-010",
+      "obj": "3.6",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "An assistant answers questions about a large codebase, and users often ask where a function is called. Semantic search returns files discussing similar concepts while missing the actual call sites. What best fits this query pattern?",
+      "principle": "exact-match queries want exact-match retrieval",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use exact symbol search for call sites, keeping semantic for concepts",
+          "correct": true,
+          "rationale": "Two query patterns are in play and only one is fuzzy. A symbol lookup is exhaustive and exact where similarity is neither, and keeping both serves each kind of question with the tool it needs."
+        },
+        {
+          "key": "B",
+          "text": "Embed at function granularity so each definition indexes separately",
+          "correct": false,
+          "rationale": "Sharpens retrieval considerably and is worth doing regardless. It improves finding the definition, while the question asked was about every place it is used."
+        },
+        {
+          "key": "C",
+          "text": "Increase the number of results returned for every code question",
+          "correct": false,
+          "rationale": "More recall does surface more call sites eventually. It floods the context to compensate for a retrieval method that was never going to be exhaustive."
+        },
+        {
+          "key": "D",
+          "text": "Put the repository structure into the prompt as retrieval context",
+          "correct": false,
+          "rationale": "Useful orientation that helps the model reason about layout. Structure tells it where files live, not which ones call the function."
+        }
+      ]
+    },
+    {
+      "qid": "d3-011",
+      "obj": "3.7",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A team wants their assistant to use an internal service that already has a stable REST API consumed by one product surface. They are deciding how to connect the two. Which approach best fits?",
+      "principle": "the lightest connection that meets the need; protocols earn their weight through reuse",
+      "options": [
+        {
+          "key": "A",
+          "text": "Wrap it in an MCP server so other assistants can reuse the tool",
+          "correct": false,
+          "rationale": "The right call the moment a second consumer appears, and MCP exists precisely for that reuse. With one consumer it is a server to run and version for a benefit nobody is collecting yet."
+        },
+        {
+          "key": "B",
+          "text": "Have the assistant shell out to the service's command line client",
+          "correct": false,
+          "rationale": "Pragmatic, and genuinely quick where a good CLI already exists. It adds a process boundary and output parsing between the assistant and an API it could call directly."
+        },
+        {
+          "key": "C",
+          "text": "Call the existing API directly from the application's tool handler",
+          "correct": true,
+          "rationale": "The API is stable and has one consumer, so a direct call is the whole integration. Protocol machinery is worth its weight when something reuses it, and nothing does yet."
+        },
+        {
+          "key": "D",
+          "text": "Expose it through an agent-to-agent protocol behind a small agent",
+          "correct": false,
+          "rationale": "Appropriate when the far side must reason or negotiate rather than answer. This service answers a well-defined API call, so the agent in the middle adds latitude nobody wants."
+        }
+      ]
+    },
+    {
+      "qid": "d3-012",
+      "obj": "3.8",
+      "rev": 1,
+      "format": "multiple_response",
+      "select_n": 2,
+      "stem": "An agent carries the full schema of a large internal API in its system prompt, though most runs touch two or three endpoints. Runs are slow and it sometimes cites endpoints that do not exist. Which two changes best help?",
+      "principle": "progressive discovery: an index in context, detail fetched on demand",
+      "options": [
+        {
+          "key": "A",
+          "text": "Move the schema out of the system prompt into the first user message",
+          "correct": false,
+          "rationale": "Changes where the tokens sit, which can matter for caching. The same volume is still resident in context on every single run."
+        },
+        {
+          "key": "B",
+          "text": "Expose a discovery tool the agent calls to look up what it needs",
+          "correct": true,
+          "rationale": "Turns a fixed cost paid every run into a variable one paid when the agent actually needs a definition, and the definitions it gets back are real ones."
+        },
+        {
+          "key": "C",
+          "text": "Instruct the agent to ignore endpoints not relevant to its task",
+          "correct": false,
+          "rationale": "Costs one line and does focus attention somewhat. The tokens remain in context and the hallucinated endpoints came from that context in the first place."
+        },
+        {
+          "key": "D",
+          "text": "Ship a short index of endpoint names, fetching detail on demand",
+          "correct": true,
+          "rationale": "The agent needs to know what exists, not what every endpoint accepts. A name index is small enough to always carry and grounds the agent in the real surface."
+        },
+        {
+          "key": "E",
+          "text": "Increase the step budget so the agent has room to self-correct",
+          "correct": false,
+          "rationale": "More attempts do let it recover from a bad guess sometimes. It buys retries of a problem the context is causing, and makes slow runs slower."
+        }
+      ]
+    }
+  ]
 }
