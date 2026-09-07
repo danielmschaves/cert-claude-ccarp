@@ -25,10 +25,10 @@ jobs:
       - name: Tests
         run: uv run pytest -q
 
-      # Structural errors only. Authoring quality is reported below, not gated here,
-      # until lint lands and can back a --strict gate.
+      # --strict promotes authoring warnings to errors, so a bank that drifts into a
+      # guessable answer key or a missing question stem fails the PR rather than the exam.
       - name: Validate blueprint and banks
-        run: uv run ccarp validate
+        run: uv run ccarp validate --strict
 
       # Informational: renders on the PR page so bank quality is visible before merge
       # rather than discoverable after it.
