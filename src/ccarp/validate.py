@@ -13,6 +13,7 @@ from pathlib import Path
 
 from . import bank as bank_mod
 from . import blueprint as blueprint_mod
+from . import lint as lint_mod
 from .config import BLUEPRINT_STALE_DAYS, QID_PATTERN
 from .models import Blueprint
 
@@ -76,7 +77,9 @@ def _check_item(item, declared_domain: str, bp: Blueprint) -> list[str]:
 
 
 def run(
-    blueprint_path: Path | None = None, banks_dir: Path | None = None
+    blueprint_path: Path | None = None,
+    banks_dir: Path | None = None,
+    strict: bool = False,
 ) -> tuple[list[str], list[str], dict]:
     """Return (errors, warnings, summary)."""
     errors: list[str] = []
@@ -116,7 +119,15 @@ def run(
         for d in bp.domains
         if per_domain.get(d.id, 0) < d.items
     }
+    # Authoring warns are advisory by default and blocking under --strict, which is what
+    # CI gates on. They never stand between you and a study session.
+    bank = bank_mod.Bank(tuple(i for d in bank_mod.DOMAIN_IDS
+                               for i in bank_mod.load_domain(d, banks_dir)[0].items))
+    lint_warns = [str(w) for w in lint_mod.run(bp, bank)]
+    (errors if strict else warnings).extend(lint_warns)
+
     summary = {
+        "lint_warnings": len(lint_warns),
         "blueprint_items": bp.total_items,
         "objectives": len(bp.objective_ids),
         "bank_total": total,

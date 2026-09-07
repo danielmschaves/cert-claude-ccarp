@@ -14,7 +14,7 @@ from .config import DEFAULT_DRILL_N
 
 
 def _cmd_validate(args: argparse.Namespace) -> int:
-    errors, warnings, summary = validate.run()
+    errors, warnings, summary = validate.run(strict=args.strict)
     render.validate_report(errors, warnings, summary)
     return 1 if errors else 0
 
@@ -88,6 +88,9 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", required=True)
 
     p_validate = sub.add_parser("validate", help="check blueprint and banks")
+    p_validate.add_argument(
+        "--strict", action="store_true",
+        help="treat authoring warnings as errors (what CI gates on)")
     p_validate.set_defaults(func=_cmd_validate)
 
     p_report = sub.add_parser("report", help="bank composition and quality tells")

@@ -123,11 +123,21 @@ uv run ccarp review --wrong
 ```
 
 `validate` exits 1 on structural error, 0 on lint warns, and must pass on empty banks.
+`validate --strict` promotes authoring warnings to errors — that is what CI gates on.
+
+Lint has two halves. Per-item rules read one item (stem length, superlative present, no
+all/none-of-the-above, no volatile figures, option count, per-item length ratio). **Distribution
+rules read a whole domain** and catch what no single item reveals: answer keys clustered on one
+letter, the correct option being longest too often, one `principle` carrying a domain, an
+objective left empty in a full domain. Those are the tells an author drifts into at volume.
+
+Not checkable by machine, and therefore still on you: whether a distractor is a real practice
+that is inferior *in this scenario*.
 
 ## Build state
 
 M1 `validate` ✅ · M2 `drill` ✅ (full 5-tier ladder) · A0 CI + `report` ✅ · A1 `stats` +
-`review --wrong` ✅ · A2 `lint` · A3 `exam --timed` · then six authoring branches.
+`review --wrong` ✅ · A2 `lint` ✅ · A3 `exam --timed` · then six authoring branches.
 
 Banks: **d1 has 10 items; d2–d7 are empty.** Authoring the remaining six domains is the
 long pole, and `validate` reports the per-domain gap on every run.
