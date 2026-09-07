@@ -1,4 +1,326 @@
 {
   "domain": "d5",
-  "items": []
+  "items": [
+    {
+      "qid": "d5-001",
+      "obj": "5.1",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "An assistant with access to customer records has a system prompt forbidding it from revealing one customer's data to another. A user constructs a request that persuades it to do so anyway. What best prevents recurrence?",
+      "principle": "a guardrail the model can be talked out of is not a control",
+      "options": [
+        {
+          "key": "A",
+          "text": "Strengthen how the prohibition is worded in the system prompt",
+          "correct": false,
+          "rationale": "Better wording does reduce how often this succeeds, and costs nothing to try. It leaves the boundary in the one place an adversary is allowed to argue with."
+        },
+        {
+          "key": "B",
+          "text": "Enforce the boundary outside the model, in the data access layer",
+          "correct": true,
+          "rationale": "A control the model cannot reason its way past is the only kind that holds under adversarial input. Scoping the query to the authenticated customer makes the leak impossible rather than discouraged."
+        },
+        {
+          "key": "C",
+          "text": "Add examples of this attack and the correct refusal to the prompt",
+          "correct": false,
+          "rationale": "Genuinely effective against the attack you have seen and its close relatives. It generalises poorly to the next phrasing, and the phrasings are unlimited."
+        },
+        {
+          "key": "D",
+          "text": "Screen incoming messages for prompt-injection patterns first",
+          "correct": false,
+          "rationale": "A real defensive layer worth having in depth. Pattern matching on adversarial input is a contest you have to keep winning, against an attacker who only needs one success."
+        }
+      ]
+    },
+    {
+      "qid": "d5-002",
+      "obj": "5.1",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "One strict output filter is applied to every response across a company's products. Legitimate answers in the medical support product are being blocked while the marketing product sees none. What best resolves this?",
+      "principle": "guardrails are calibrated to context, not applied uniformly",
+      "options": [
+        {
+          "key": "A",
+          "text": "Loosen the shared filter until the medical product stops blocking",
+          "correct": false,
+          "rationale": "Immediately fixes the reported problem with a single change. It relaxes the filter for the marketing product too, which never asked for and cannot absorb that."
+        },
+        {
+          "key": "B",
+          "text": "Let the medical product bypass the filter for clinical terminology",
+          "correct": false,
+          "rationale": "Targets the actual collision and keeps protection elsewhere. A bypass is a hole with a name, and clinical vocabulary overlaps precisely with what the filter exists to catch."
+        },
+        {
+          "key": "C",
+          "text": "Set guardrail thresholds per product from each one's risk profile",
+          "correct": true,
+          "rationale": "The products differ in what a false positive and a false negative cost, so one threshold is wrong for at least one of them. Calibrating per context is the change that makes both correct at once."
+        },
+        {
+          "key": "D",
+          "text": "Route blocked medical responses to a human reviewer for release",
+          "correct": false,
+          "rationale": "Recovers the blocked answers without weakening anything, and adds a useful audit trail. It puts a person in the path of a routine case forever, at medical support volumes."
+        }
+      ]
+    },
+    {
+      "qid": "d5-003",
+      "obj": "5.2",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "An agent with write access to a ticketing system runs autonomously overnight under a step budget. It misreads one instruction and updates hundreds of tickets incorrectly. What most directly reduces this class of risk?",
+      "principle": "for autonomous write access, bound the damage rather than the likelihood",
+      "options": [
+        {
+          "key": "A",
+          "text": "Bound the blast radius by limiting write scope and write rate",
+          "correct": true,
+          "rationale": "Autonomy means nobody is watching, so the question is not whether a mistake happens but how far it gets. Scope and rate limits are what convert an overnight disaster into a contained one."
+        },
+        {
+          "key": "B",
+          "text": "Add a confirmation step before the agent starts its overnight run",
+          "correct": false,
+          "rationale": "A cheap gate that does force intent to be explicit. It confirms the run before the misreading, which is the moment at which nothing is yet wrong."
+        },
+        {
+          "key": "C",
+          "text": "Improve the instructions so the misreading is less likely to recur",
+          "correct": false,
+          "rationale": "Worth doing, and it will genuinely lower the frequency. It addresses this misunderstanding rather than the next one, and the exposure is unchanged."
+        },
+        {
+          "key": "D",
+          "text": "Log every write so incorrect updates can be found and reversed",
+          "correct": false,
+          "rationale": "Essential for recovery and for knowing the extent of the damage. Detection happens after hundreds of tickets have already been rewritten."
+        }
+      ]
+    },
+    {
+      "qid": "d5-004",
+      "obj": "5.2",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A team preparing a customer-facing assistant for launch has tested extensively for factual errors and has a rehearsed rollback plan. The assistant can also take actions on a customer's account. Which risk is most likely underexamined?",
+      "principle": "actions carry risks answers do not: irreversibility and misattribution",
+      "options": [
+        {
+          "key": "A",
+          "text": "A factually wrong answer produced under unusually high load",
+          "correct": false,
+          "rationale": "Load does change behaviour, through timeouts and truncation. This is the failure mode the team has already tested most heavily."
+        },
+        {
+          "key": "B",
+          "text": "The rollback plan failing to restore service during an incident",
+          "correct": false,
+          "rationale": "Untested rollbacks are a real and common trap. The team has rehearsed this one, and rollback restores the service rather than the account it changed."
+        },
+        {
+          "key": "C",
+          "text": "Answers drifting in tone away from the company's brand guidelines",
+          "correct": false,
+          "rationale": "A genuine quality risk that damages trust slowly. It is recoverable, visible, and affects perception rather than customer state."
+        },
+        {
+          "key": "D",
+          "text": "An action taken on the wrong account proving hard to detect or undo",
+          "correct": true,
+          "rationale": "Everything the team has prepared addresses saying the wrong thing, which is visible and reversible. Doing the wrong thing to the wrong account may be neither, and a rollback of the assistant does not roll back the account."
+        }
+      ]
+    },
+    {
+      "qid": "d5-005",
+      "obj": "5.3",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "An assistant drafts refund decisions that a human approves before they take effect. Approvers now accept almost everything without reading it, and errors reaching customers have risen. What best restores the value of the review?",
+      "principle": "human review works where it is scarce; universal review becomes a rubber stamp",
+      "options": [
+        {
+          "key": "A",
+          "text": "Remind approvers of their responsibility and audit their decisions",
+          "correct": false,
+          "rationale": "Addresses the behaviour directly and creates accountability. It asks people to sustain attention across a queue that is overwhelmingly routine, which reliably fails."
+        },
+        {
+          "key": "B",
+          "text": "Route only uncertain or high-value cases to a human for review",
+          "correct": true,
+          "rationale": "Attention is the scarce resource, and spreading it over every case guarantees none receives much. Making review rare makes each review meaningful again."
+        },
+        {
+          "key": "C",
+          "text": "Require approvers to type a justification for every approval",
+          "correct": false,
+          "rationale": "Friction does slow the reflex and produces a record. It taxes the routine cases equally and tends to generate boilerplate rather than scrutiny."
+        },
+        {
+          "key": "D",
+          "text": "Replace approval with a sample-based audit conducted afterwards",
+          "correct": false,
+          "rationale": "Efficient and often the right design where errors are recoverable. Refunds take effect on customers, so this removes the gate rather than aiming it."
+        }
+      ]
+    },
+    {
+      "qid": "d5-006",
+      "obj": "5.3",
+      "rev": 1,
+      "format": "multiple_response",
+      "select_n": 2,
+      "stem": "A hospital wants an assistant to draft discharge summaries for clinicians. The team is deciding where humans must remain in the loop before anything reaches a patient record. Which two placements best fit?",
+      "principle": "humans in the loop where the decision is consequential, and where corrections can feed back",
+      "options": [
+        {
+          "key": "A",
+          "text": "A clinician approves each summary before it enters the record",
+          "correct": true,
+          "rationale": "The output is clinical documentation with direct patient consequence and no cheap reversal, which is the case for review of every item rather than a sample."
+        },
+        {
+          "key": "B",
+          "text": "A clinician reviews a random sample of summaries each week",
+          "correct": false,
+          "rationale": "Good for measuring quality and catching drift over time. Sampling accepts that unreviewed errors reach the record, which is what this content cannot tolerate."
+        },
+        {
+          "key": "C",
+          "text": "A reviewer signs off on prompt changes before they are released",
+          "correct": false,
+          "rationale": "Sound change management for a clinical system and worth having. It governs the system rather than the individual outputs it produces."
+        },
+        {
+          "key": "D",
+          "text": "A clinician can correct the summary, with corrections captured",
+          "correct": true,
+          "rationale": "Approval alone yields a gate that never learns. Capturing the edits turns routine clinical review into the evaluation signal the system improves on."
+        },
+        {
+          "key": "E",
+          "text": "An administrator reviews aggregate quality metrics each month",
+          "correct": false,
+          "rationale": "Necessary governance that makes systemic problems visible. Monthly aggregates are far too coarse and too late to protect any particular patient's record."
+        }
+      ]
+    },
+    {
+      "qid": "d5-007",
+      "obj": "5.4",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A team wants to send European customer support transcripts to a model provider for a quality-scoring feature. The transcripts contain names and contact details. Which step is most important before proceeding?",
+      "principle": "under GDPR, lawful basis and data minimisation come before technical controls",
+      "options": [
+        {
+          "key": "A",
+          "text": "Encrypt the transcripts in transit and while they are processed",
+          "correct": false,
+          "rationale": "Required, and an obvious gap if missing. Encryption governs how personal data is protected during a transfer, not whether that transfer is permitted at all."
+        },
+        {
+          "key": "B",
+          "text": "Obtain each customer's consent to have their transcript scored",
+          "correct": false,
+          "rationale": "One lawful basis, and the most familiar. Consent is often the wrong instrument for processing incidental to a service, and treating it as the only option leads teams to collect it where it will not hold."
+        },
+        {
+          "key": "C",
+          "text": "Establish a lawful basis and minimise the personal data sent",
+          "correct": true,
+          "rationale": "The first questions are whether this processing is permitted and how little data it can run on. Both are answered before any control is chosen, and both shrink what the remaining controls have to protect."
+        },
+        {
+          "key": "D",
+          "text": "Replace names with random tokens before the transcripts are sent",
+          "correct": false,
+          "rationale": "Genuinely reduces exposure and is part of a good design. Reversible tokenisation is pseudonymisation rather than anonymisation, so the data remains personal data and the prior questions still stand."
+        }
+      ]
+    },
+    {
+      "qid": "d5-008",
+      "obj": "5.4",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A vendor's assistant will process patient records for a US hospital. The vendor states that its infrastructure is secure and its staff are trained. What is most needed before the hospital can proceed under HIPAA?",
+      "principle": "HIPAA requires a contractual chain of custody, not only technical controls",
+      "options": [
+        {
+          "key": "A",
+          "text": "A business associate agreement governing the vendor's use of the data",
+          "correct": true,
+          "rationale": "HIPAA binds anyone handling protected health information on a covered entity's behalf through contract. Without that agreement the disclosure is not permitted, however good the vendor's security happens to be."
+        },
+        {
+          "key": "B",
+          "text": "Evidence that records are encrypted at rest and while in transit",
+          "correct": false,
+          "rationale": "A reasonable diligence request and part of the security rule. Verifying a safeguard does not create the legal relationship that permits the disclosure."
+        },
+        {
+          "key": "C",
+          "text": "A commitment that the records will not be used to train models",
+          "correct": false,
+          "rationale": "An important term, and one that belongs in the contract. It is a clause rather than the instrument, and secondary use is only one of the things needing governing."
+        },
+        {
+          "key": "D",
+          "text": "An audit log of every access the vendor's staff make to records",
+          "correct": false,
+          "rationale": "Valuable for oversight and often contractually required. Auditing what a vendor does presumes the vendor may already hold the data."
+        }
+      ]
+    },
+    {
+      "qid": "d5-009",
+      "obj": "5.5",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A screening assistant ranks job applicants and was built from the company's past hiring decisions. Its rankings closely match what the hiring team would have chosen themselves. Which concern is most significant?",
+      "principle": "agreement with historical decisions measures fidelity, not fairness",
+      "options": [
+        {
+          "key": "A",
+          "text": "Applicants are not told that an assistant screens their application",
+          "correct": false,
+          "rationale": "A real transparency obligation and increasingly a legal one. It concerns how the process is disclosed rather than whether its output is sound."
+        },
+        {
+          "key": "B",
+          "text": "Nobody can explain why a particular applicant was ranked low",
+          "correct": false,
+          "rationale": "Explainability matters for contesting decisions and for debugging. Explanations of a biased ranking make it legible without making it fair."
+        },
+        {
+          "key": "C",
+          "text": "Matching past decisions reproduces whatever bias those held",
+          "correct": true,
+          "rationale": "The close match is being read as evidence of quality when it is evidence of fidelity. A system fit to historical choices inherits their skew, and agreement with them is exactly the measurement that cannot detect it."
+        },
+        {
+          "key": "D",
+          "text": "Rankings may drift as the composition of the applicant pool changes",
+          "correct": false,
+          "rationale": "Drift is real and worth monitoring over time. It describes future degradation from a baseline whose soundness is the thing in question."
+        }
+      ]
+    }
+  ]
 }
