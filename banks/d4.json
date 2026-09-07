@@ -1,4 +1,361 @@
 {
   "domain": "d4",
-  "items": []
+  "items": [
+    {
+      "qid": "d4-001",
+      "obj": "4.1",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A summarisation feature is scored by text similarity against reference summaries written by one analyst. Scores are high while users say the summaries miss what matters to them. What best improves the evaluation?",
+      "principle": "measure the property you care about, not proximity to one example",
+      "options": [
+        {
+          "key": "A",
+          "text": "Collect more reference summaries from the same analyst",
+          "correct": false,
+          "rationale": "More references reduce variance and are straightforward to gather. They encode one person's judgement more firmly, which is the assumption in question."
+        },
+        {
+          "key": "B",
+          "text": "Switch to a stricter similarity metric that punishes omissions",
+          "correct": false,
+          "rationale": "A sharper instrument, and omissions are plausibly the failure. It measures distance from a particular summary more precisely rather than measuring usefulness."
+        },
+        {
+          "key": "C",
+          "text": "Define what a good summary must contain and grade against that",
+          "correct": true,
+          "rationale": "Users are complaining about content, not wording, so the eval has to name the content that matters. A rubric measures the property directly instead of inferring it from resemblance to one person's output."
+        },
+        {
+          "key": "D",
+          "text": "Have a model judge each summary against the reference for quality",
+          "correct": false,
+          "rationale": "Model grading captures nuance no string metric can, and scales well. Pointed at the same reference, it inherits the same assumption about what good means."
+        }
+      ]
+    },
+    {
+      "qid": "d4-002",
+      "obj": "4.1",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A classifier flags rare compliance breaches and reports high overall accuracy, which has pleased its stakeholders. Breaches are a small minority of cases and almost all of them are being missed. Which metric choice best reflects the goal?",
+      "principle": "choose the metric that moves when the thing you care about fails",
+      "options": [
+        {
+          "key": "A",
+          "text": "Recall on the breach class, with precision reported beside it",
+          "correct": true,
+          "rationale": "The cost here is a missed breach, so the headline metric has to be the one that falls when breaches are missed. Precision alongside stops recall being bought with noise."
+        },
+        {
+          "key": "B",
+          "text": "Overall accuracy, tracked as a trend rather than one figure",
+          "correct": false,
+          "rationale": "Trends do surface drift that a snapshot hides. A metric dominated by the majority class moves for majority-class reasons, whether plotted once or weekly."
+        },
+        {
+          "key": "C",
+          "text": "A weighted accuracy counting each class by how often it occurs",
+          "correct": false,
+          "rationale": "Weighting sounds like the correction for imbalance and is common. Weighting by frequency weights toward the class that is already drowning out the other."
+        },
+        {
+          "key": "D",
+          "text": "The rate of agreement between the classifier and human reviewers",
+          "correct": false,
+          "rationale": "A real and useful check, especially for calibrating reviewers. Agreement is dominated by the easy negatives both sides get right."
+        }
+      ]
+    },
+    {
+      "qid": "d4-003",
+      "obj": "4.2",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A team builds its eval set by sampling recent production traffic at random. The assistant scores well on it while failing the unusual requests the support team hears about constantly. What best improves the eval set?",
+      "principle": "an eval set is stratified by risk, not drawn in proportion to traffic",
+      "options": [
+        {
+          "key": "A",
+          "text": "Sample more production traffic so rare cases appear in proportion",
+          "correct": false,
+          "rationale": "A larger sample does eventually contain rare cases. In proportion they stay rare, so the aggregate score still cannot move when they fail."
+        },
+        {
+          "key": "B",
+          "text": "Weight the eval set toward the request types seen most often",
+          "correct": false,
+          "rationale": "Aligns the eval with where the volume is, which is a defensible priority. It deliberately shifts attention away from the cases that are actually breaking."
+        },
+        {
+          "key": "C",
+          "text": "Replace the sample with cases written by the engineering team",
+          "correct": false,
+          "rationale": "Hand-written cases target known risks precisely and are quick to produce. Written alone, they encode what the team already imagined and lose contact with real traffic."
+        },
+        {
+          "key": "D",
+          "text": "Add the known failure cases deliberately beside the random sample",
+          "correct": true,
+          "rationale": "Support has already found the failures; an eval set that omits them cannot see the problem. Keeping the random sample preserves the realistic base while the added cases carry the risk."
+        }
+      ]
+    },
+    {
+      "qid": "d4-004",
+      "obj": "4.2",
+      "rev": 1,
+      "format": "multiple_response",
+      "select_n": 2,
+      "stem": "A team tests its assistant with one automated metric over a fixed dataset before each release. Regressions in tone and in refusal behaviour keep reaching production unnoticed. Which two additions best strengthen the framework?",
+      "principle": "mixed methods: automated for regression, judged for what metrics cannot see",
+      "options": [
+        {
+          "key": "A",
+          "text": "Increase the size of the automated dataset substantially",
+          "correct": false,
+          "rationale": "More cases narrow the confidence interval and catch more regressions of the kind the metric measures. It cannot see qualities the metric does not encode."
+        },
+        {
+          "key": "B",
+          "text": "Add a model-graded rubric covering tone and refusal behaviour",
+          "correct": true,
+          "rationale": "Puts the missing qualities under automated measurement, so they gain a regression signal on every release rather than being noticed by users."
+        },
+        {
+          "key": "C",
+          "text": "Add a small human review pass over a sample of each release",
+          "correct": true,
+          "rationale": "Humans catch the failures nobody thought to encode, including in the rubric. A small sample is enough because the purpose is discovery rather than measurement."
+        },
+        {
+          "key": "D",
+          "text": "Run the existing automated metric more often during development",
+          "correct": false,
+          "rationale": "Faster feedback is genuinely valuable and shortens the debugging loop. Running a blind spot more frequently does not narrow it."
+        },
+        {
+          "key": "E",
+          "text": "Track the automated metric per release as a trend line",
+          "correct": false,
+          "rationale": "Good practice that makes slow drift visible over time. It plots the same measurement that is already missing these regressions."
+        }
+      ]
+    },
+    {
+      "qid": "d4-005",
+      "obj": "4.3",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A team ships a new prompt to every user at once and compares this week's satisfaction scores against last week's. The new prompt looks better. What most undermines this conclusion?",
+      "principle": "without a concurrent control you have a before-and-after, not an experiment",
+      "options": [
+        {
+          "key": "A",
+          "text": "Nothing separates the prompt's effect from everything else that changed",
+          "correct": true,
+          "rationale": "Traffic mix, seasonality and any other release that week all land in the same comparison. A concurrent control is what isolates the change, and shipping to everyone removed it."
+        },
+        {
+          "key": "B",
+          "text": "Satisfaction scores are subjective and vary between individual users",
+          "correct": false,
+          "rationale": "True, and it is why these measurements are noisy. Noise widens the interval; it does not explain a difference away, and randomisation would handle it."
+        },
+        {
+          "key": "C",
+          "text": "One week may be too short to see the full effect of the change",
+          "correct": false,
+          "rationale": "A real concern, particularly where users take time to adapt. Running longer without a control produces a longer uncontrolled comparison."
+        },
+        {
+          "key": "D",
+          "text": "Users were not told the assistant's behaviour had been changed",
+          "correct": false,
+          "rationale": "Worth considering for transparency, and disclosure can shift expectations. Not telling users is closer to good experimental hygiene than to a flaw."
+        }
+      ]
+    },
+    {
+      "qid": "d4-006",
+      "obj": "4.4",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "An assistant answering policy questions confidently states a policy that does not exist. Retrieval logs show the correct policy document was returned for that query. What is the most likely first place to investigate?",
+      "principle": "when grounding is retrieved but ignored, suspect the instruction before the model",
+      "options": [
+        {
+          "key": "A",
+          "text": "The retrieval index, which may hold a stale copy of the policy",
+          "correct": false,
+          "rationale": "Staleness is a common cause of confidently wrong answers and worth ruling out. The logs already show the right document came back for this query."
+        },
+        {
+          "key": "B",
+          "text": "The model, which may be too small for the reasoning required",
+          "correct": false,
+          "rationale": "Capability mismatch does produce fabrication under load. It is an expensive hypothesis to test first when a cheaper one upstream is untested."
+        },
+        {
+          "key": "C",
+          "text": "The prompt, which may not require answers to come from the sources",
+          "correct": true,
+          "rationale": "The evidence reached the model and the model did not use it, which points at the instruction governing whether it must. It is also the cheapest hypothesis to falsify."
+        },
+        {
+          "key": "D",
+          "text": "The chunking, which may have split the policy across boundaries",
+          "correct": false,
+          "rationale": "A real failure mode that produces exactly this kind of confident gap-filling. The retrieval log says the document was returned, so this is a step further out than the evidence requires."
+        }
+      ]
+    },
+    {
+      "qid": "d4-007",
+      "obj": "4.4",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "An agent performs well in testing and fails on long real conversations, contradicting what was agreed earlier in the same thread. Every test case is short. What best explains this?",
+      "principle": "reproduce the failure's conditions: the test set omitted the variable that breaks it",
+      "options": [
+        {
+          "key": "A",
+          "text": "The model is too small to stay consistent across a long session",
+          "correct": false,
+          "rationale": "Capability does affect coherence and a stronger model would paper over some of this. It does not explain why the failures track conversation length so exactly."
+        },
+        {
+          "key": "B",
+          "text": "Earlier turns drop out of context as the conversation grows",
+          "correct": true,
+          "rationale": "The one variable that separates passing tests from failing production is length, and length is what evicts the earlier agreement. The agent is not contradicting itself so much as no longer able to see itself."
+        },
+        {
+          "key": "C",
+          "text": "The system prompt lacks an instruction to stay internally consistent",
+          "correct": false,
+          "rationale": "A reasonable guardrail to add and it costs nothing. Instructing consistency about content the model can no longer see does not restore the content."
+        },
+        {
+          "key": "D",
+          "text": "Sampling temperature is too high for a multi-turn conversation",
+          "correct": false,
+          "rationale": "Lower temperature does make a model steadier turn to turn. Variance would show up in short conversations too, and those pass."
+        }
+      ]
+    },
+    {
+      "qid": "d4-008",
+      "obj": "4.5",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "An assistant sends a long, unchanging policy document as the prefix of every request, followed by a short question. Cost scales with traffic and latency is dominated by that prefix. What best reduces both?",
+      "principle": "cache what is stable and repeated before shrinking what is needed",
+      "options": [
+        {
+          "key": "A",
+          "text": "Summarise the policy so the prefix carried each time is shorter",
+          "correct": false,
+          "rationale": "Fewer tokens on every call, which does cut both. It discards detail permanently to solve a repetition problem, so answers needing the omitted text get worse."
+        },
+        {
+          "key": "B",
+          "text": "Retrieve only the policy sections relevant to each question",
+          "correct": false,
+          "rationale": "The right architecture as the corpus grows, and a large reduction. It introduces a retrieval step that can miss a section, trading a cost problem for a correctness risk."
+        },
+        {
+          "key": "C",
+          "text": "Move to a cheaper model to reduce the per-token cost of the prefix",
+          "correct": false,
+          "rationale": "Directly attacks the cost side and may be acceptable. It pays for the same wasted tokens at a lower rate and does little for the latency of processing them."
+        },
+        {
+          "key": "D",
+          "text": "Cache the stable prefix so repeated tokens are not reprocessed",
+          "correct": true,
+          "rationale": "The prefix is identical across requests, which is exactly the condition caching exists for. It removes the repeated work without removing any content or adding a step that can fail."
+        }
+      ]
+    },
+    {
+      "qid": "d4-009",
+      "obj": "4.5",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A pipeline sends every document to the frontier model for field extraction, then makes a second call to validate the result. Volume is growing and cost with it. Which change best reduces cost while holding output quality?",
+      "principle": "tiered routing: pay frontier prices only for the cases that need them",
+      "options": [
+        {
+          "key": "A",
+          "text": "Route straightforward documents to a small model, escalating the rest",
+          "correct": true,
+          "rationale": "Difficulty is not uniform across documents, so a uniform model choice overpays for the easy majority. Escalation keeps frontier capability exactly where it changes the answer."
+        },
+        {
+          "key": "B",
+          "text": "Drop the validation call and trust the extraction to be correct",
+          "correct": false,
+          "rationale": "The largest single saving available and tempting when validation rarely fires. It buys the reduction with the quality the question rules out spending."
+        },
+        {
+          "key": "C",
+          "text": "Batch documents into fewer and larger calls to the frontier model",
+          "correct": false,
+          "rationale": "Cuts per-request overhead and helps throughput noticeably. The token volume, which is what dominates this bill, is unchanged."
+        },
+        {
+          "key": "D",
+          "text": "Cache extraction results so repeated documents are not reprocessed",
+          "correct": false,
+          "rationale": "Free savings wherever inputs recur, and worth having. A pipeline processing new documents has little repetition to exploit."
+        }
+      ]
+    },
+    {
+      "qid": "d4-010",
+      "obj": "4.6",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A team records the final answer and a pass-or-fail verdict for each agent run. After a prompt change degrades quality, they cannot tell which step of the agent started behaving differently. What best addresses this?",
+      "principle": "log at the granularity you will need to debug at",
+      "options": [
+        {
+          "key": "A",
+          "text": "Record the prompt version alongside every logged agent run",
+          "correct": false,
+          "rationale": "Essential for correlating a regression with a release, and cheap to add. It identifies which change is responsible without showing what the change did."
+        },
+        {
+          "key": "B",
+          "text": "Log each step's input and output, not only the run's outcome",
+          "correct": true,
+          "rationale": "The question being asked is about a step, and the logs only describe runs. Step-level records are the granularity at which the answer exists."
+        },
+        {
+          "key": "C",
+          "text": "Increase the proportion of runs that are logged in full",
+          "correct": false,
+          "rationale": "More coverage of the same shape of record. A larger sample of outcomes still contains no intermediate state."
+        },
+        {
+          "key": "D",
+          "text": "Add a second verdict from a model judge for each logged answer",
+          "correct": false,
+          "rationale": "A richer quality signal that would sharpen regression detection. It grades the output more finely rather than opening up how the output was produced."
+        }
+      ]
+    }
+  ]
 }
