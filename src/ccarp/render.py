@@ -84,9 +84,12 @@ def shortfall(sf) -> None:
     out(head + tail)
 
 
-def question(item, index: int, total: int) -> None:
+def question(item, index: int, total: int, clock=None) -> None:
     out()
-    out(f"{c(f'[{index}/{total}]', DIM)} {c(item.qid, BOLD)} {c('· obj ' + item.obj, DIM)}")
+    head = f"{c(f'[{index}/{total}]', DIM)} {c(item.qid, BOLD)} {c('· obj ' + item.obj, DIM)}"
+    if clock is not None:
+        head += f"   {c(clock.format_remaining() + ' left', DIM)}"
+    out(head)
     out()
     for line in _wrap(item.stem):
         out(f"  {line}")
@@ -282,3 +285,56 @@ def stats_report(report, by_objective: bool = False) -> None:
         for s in report.by_objective:
             out(_stat_row(s))
     out()
+
+
+def time_warning(minutes: int) -> None:
+    out(f"  {c(f'-- {minutes} minute(s) remaining --', YELLOW)}")
+
+
+def time_up() -> None:
+    out()
+    out(c("time is up", YELLOW))
+
+
+def exam_blocked(short: dict, reports: list) -> None:
+    """A 58-item mock is not a mock, so say why rather than serving a partial exam."""
+    out(c("cannot start an exam yet", YELLOW))
+    out()
+    for r in reports:
+        if r.domain_id in short:
+            out(f"  {c(r.domain_id, BOLD)} {r.have}/{r.need}  "
+                f"{c(f'{short[r.domain_id]} short', YELLOW)}   {c(r.name, DIM)}")
+    out()
+    out(c("  the blueprint quota cannot be filled; a partial exam would not be a mock", DIM))
+
+
+def exam_report(result) -> None:
+    out()
+    out(c("=" * 64, DIM))
+    mins, secs = divmod(result.elapsed_secs, 60)
+    out(f"{c('exam complete', BOLD)}   {c(f'{mins}m {secs:02d}s', DIM)}")
+    out()
+    # Raw first, always -- the estimate is the derived number, not the measurement.
+    out(f"  {c('raw', BOLD)}  {result.raw_correct}/{result.raw_total}  "
+        f"({result.pct:.1%})")
+    out(f"  {c('scaled_score_est', BOLD)}  {result.scaled_score_est}   "
+        f"{c(f'cut {result.cut}', DIM)}")
+    if result.unanswered:
+        out(f"  {c(f'{result.unanswered} item(s) unanswered (scored incorrect)', YELLOW)}")
+    out()
+    for line in _wrap(result.caveat, width=62):
+        out(f"  {c(line, DIM)}")
+    out()
+    out(c("  percent correct by domain", DIM))
+    for s in result.by_domain:
+        bar = _bar(s.correct, s.total)
+        out(f"    {c(s.domain_id, BOLD)} {bar} {s.correct:>2}/{s.total:<2} {s.pct:>4.0%}   "
+            f"{c(s.name, DIM)}")
+    out()
+
+
+def exam_start(count: int, minutes: int | None) -> None:
+    clock = f"{minutes} minutes" if minutes else "untimed"
+    out()
+    out(f"{c('exam', BOLD)}  {count} items · {clock} · answers revealed at the end")
+    out(c("  q to stop early; unanswered items are scored incorrect", DIM))

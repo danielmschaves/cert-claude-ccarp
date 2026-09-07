@@ -16,8 +16,14 @@ class FakePresenter:
         self.confidences = list(confidences)
         self.calls: list[str] = []
 
-    def question(self, item, index, total):
+    def question(self, item, index, total, clock=None):
         self.calls.append("question")
+
+    def time_warning(self, minutes):
+        self.calls.append(f"warn-{minutes}")
+
+    def time_up(self):
+        self.calls.append("time_up")
 
     def ask_answer(self, item):
         self.calls.append("ask_answer")

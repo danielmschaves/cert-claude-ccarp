@@ -137,7 +137,10 @@ that is inferior *in this scenario*.
 ## Build state
 
 M1 `validate` ✅ · M2 `drill` ✅ (full 5-tier ladder) · A0 CI + `report` ✅ · A1 `stats` +
-`review --wrong` ✅ · A2 `lint` ✅ · A3 `exam --timed` · then six authoring branches.
+`review --wrong` ✅ · A2 `lint` ✅ · A3 `exam --timed` ✅ · then six authoring branches.
+
+`exam` refuses to start until every domain meets its blueprint quota, so it stays blocked
+until the authoring branches land. That is deliberate: a 58-item mock is not a mock.
 
 Banks: **d1 has 10 items; d2–d7 are empty.** Authoring the remaining six domains is the
 long pole, and `validate` reports the per-domain gap on every run.
