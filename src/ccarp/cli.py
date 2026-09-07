@@ -7,8 +7,9 @@ import sys
 from datetime import UTC, datetime
 
 from . import bank as bank_mod
+from . import blueprint as blueprint_mod
 from . import progress as progress_mod
-from . import render, runner, selection, validate
+from . import render, report, runner, selection, validate
 from .config import DEFAULT_DRILL_N
 
 
@@ -40,6 +41,16 @@ def _cmd_drill(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_report(args: argparse.Namespace) -> int:
+    bp = blueprint_mod.load()
+    reports = report.build(bp, bank_mod.load())
+    if args.markdown:
+        render.bank_report_markdown(reports)
+    else:
+        render.bank_report(reports)
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="ccarp",
@@ -49,6 +60,10 @@ def build_parser() -> argparse.ArgumentParser:
 
     p_validate = sub.add_parser("validate", help="check blueprint and banks")
     p_validate.set_defaults(func=_cmd_validate)
+
+    p_report = sub.add_parser("report", help="bank composition and quality tells")
+    p_report.add_argument("--markdown", action="store_true", help="emit a markdown table")
+    p_report.set_defaults(func=_cmd_report)
 
     p_drill = sub.add_parser("drill", help="drill questions, newest material first")
     p_drill.add_argument("-n", type=int, default=DEFAULT_DRILL_N, help="how many items")
