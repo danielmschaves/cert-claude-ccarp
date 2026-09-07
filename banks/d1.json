@@ -356,6 +356,41 @@
           "rationale": "Simple, and it removes retrieval as a source of error, which is a real advantage. It pays for the whole handbook every time and gives no signal about which section the answer came from."
         }
       ]
+    },
+    {
+      "qid": "d1-011",
+      "obj": "1.1",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A product lead asks for an assistant that understands the roadmap. Pressed on what decision it would change, they describe engineers repeatedly asking which quarter a feature is committed to. Which framing best translates this request?",
+      "principle": "scope to the decision the user actually needs to make",
+      "options": [
+        {
+          "key": "A",
+          "text": "Build a roadmap assistant that answers open questions on strategy",
+          "correct": false,
+          "rationale": "The literal reading of the request, and the most impressive demo. It is unbounded, has no success test, and nothing in the discovery suggests strategy questions are what anyone is actually stuck on."
+        },
+        {
+          "key": "B",
+          "text": "Summarise the roadmap into a digest published to the team weekly",
+          "correct": false,
+          "rationale": "Cheap, useful, and genuinely reduces repeated reading. A digest is stale the moment a commitment moves, which is exactly the question being asked."
+        },
+        {
+          "key": "C",
+          "text": "Generate roadmap updates automatically from the issue tracker state",
+          "correct": false,
+          "rationale": "Attacks a real upstream problem: the roadmap drifting from reality. It is a different and larger project than answering the question the engineers keep asking."
+        },
+        {
+          "key": "D",
+          "text": "Answer commitment-date questions, grounded in the roadmap of record",
+          "correct": true,
+          "rationale": "Names the decision being made, the evidence it rests on, and a success test you can write down. A vague request becomes solvable only once it is reduced to the question someone is actually asking."
+        }
+      ]
     }
   ]
 }
