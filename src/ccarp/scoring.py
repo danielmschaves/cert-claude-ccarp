@@ -94,10 +94,18 @@ def new_seed(now: datetime) -> str:
 
 
 def grade(
-    bp: Blueprint, served: list[Item], attempts: list[Attempt], elapsed_secs: int
+    bp: Blueprint,
+    served: list[Item],
+    attempts: list[Attempt],
+    elapsed_secs: int,
+    unanswered: frozenset[str] = frozenset(),
 ) -> ExamResult:
+    """`unanswered` is passed in, never inferred.
+
+    Deriving it from secs == 0 looks tempting and is wrong: an item answered quickly also
+    records zero seconds, so a fast sitting would report itself as entirely unanswered.
+    """
     by_qid = {a.qid: a for a in attempts}
-    answered = {a.qid for a in attempts if a.secs > 0}
 
     scores: list[DomainScore] = []
     for d in bp.domains:
@@ -119,7 +127,7 @@ def grade(
     return ExamResult(
         raw_correct=correct,
         raw_total=total,
-        unanswered=total - len(answered),
+        unanswered=len(unanswered),
         by_domain=tuple(scores),
         scaled_score_est=scaled_score_est(pct, scale),
         cut=int(scale["cut"]),

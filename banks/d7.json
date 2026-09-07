@@ -1,4 +1,145 @@
 {
   "domain": "d7",
-  "items": []
+  "items": [
+    {
+      "qid": "d7-001",
+      "obj": "7.1",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A team has adopted an AI coding assistant and each engineer maintains their own configuration and prompts for it. Review comments now differ noticeably depending on who ran the tool. What best addresses this?",
+      "principle": "team tooling configuration belongs in the repository, versioned with the code",
+      "options": [
+        {
+          "key": "A",
+          "text": "Check a shared project configuration into the repository itself",
+          "correct": true,
+          "rationale": "Configuration in the repository is versioned, reviewed and applied identically to everyone, so consistency stops depending on individual discipline. It also travels with branches, so the rules match the code they are judging."
+        },
+        {
+          "key": "B",
+          "text": "Publish a recommended configuration for engineers to copy locally",
+          "correct": false,
+          "rationale": "A real improvement over nothing, and it costs almost no coordination. Copies diverge the moment the recommendation changes, which is the situation the team is already in."
+        },
+        {
+          "key": "C",
+          "text": "Have a single engineer run the tool across the whole team's reviews",
+          "correct": false,
+          "rationale": "Guarantees consistency, and someone does become expert at it. It creates a bottleneck and removes the tool from the hands of the people writing the code."
+        },
+        {
+          "key": "D",
+          "text": "Add lint rules that catch the issues the reviews are missing today",
+          "correct": false,
+          "rationale": "Deterministic checks are strictly better than probabilistic ones where a rule can be written. Only some review comments reduce to lint rules, and the inconsistency covers all of them."
+        }
+      ]
+    },
+    {
+      "qid": "d7-002",
+      "obj": "7.1",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A team wants its assistant to follow project conventions without every engineer restating them in each prompt. The conventions change as the project evolves. What best achieves this?",
+      "principle": "project context lives where the assistant reads it and the repository versions it",
+      "options": [
+        {
+          "key": "A",
+          "text": "Circulate a conventions document engineers paste in when needed",
+          "correct": false,
+          "rationale": "Keeps one source of truth and is trivial to set up. It relies on every engineer remembering, every time, and quietly reintroduces the per-prompt restating."
+        },
+        {
+          "key": "B",
+          "text": "Keep the conventions in a project file the assistant reads each session",
+          "correct": true,
+          "rationale": "The assistant picks them up without anyone remembering to supply them, and because the file is in the repository the conventions change through review alongside the code they describe."
+        },
+        {
+          "key": "C",
+          "text": "Cover the conventions thoroughly during new engineer onboarding",
+          "correct": false,
+          "rationale": "Necessary for the humans and genuinely worth investing in. Onboarding informs engineers, while the thing repeating the conventions into prompts is the assistant."
+        },
+        {
+          "key": "D",
+          "text": "Put the conventions into the description of each tool the assistant has",
+          "correct": false,
+          "rationale": "Tool descriptions are read at the right moment and do influence behaviour. They are scoped to one tool each, so shared conventions end up duplicated across all of them."
+        }
+      ]
+    },
+    {
+      "qid": "d7-003",
+      "obj": "7.2",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A team has its assistant perform a large refactor across many files in a single run. The result compiles and tests pass, but reviewers cannot tell which changes were mechanical and which were judgement calls. What best improves this workflow?",
+      "principle": "structure AI-assisted work for review, because review is the bottleneck",
+      "options": [
+        {
+          "key": "A",
+          "text": "Ask the assistant to summarise the changes it made at the end",
+          "correct": false,
+          "rationale": "Useful orientation that reviewers will read, and nearly free. A summary describes a diff that still has to be reviewed as one undifferentiated block."
+        },
+        {
+          "key": "B",
+          "text": "Have the assistant add tests covering the refactored code paths",
+          "correct": false,
+          "rationale": "Raises confidence that behaviour is preserved, which is much of what review is for. Tests confirm the outcome without making the judgement calls visible."
+        },
+        {
+          "key": "C",
+          "text": "Split the work into separate commits grouped by kind of change",
+          "correct": true,
+          "rationale": "Mechanical changes can be skimmed and judgement calls need real attention, and only separation lets a reviewer spend their attention that way. The bottleneck in AI-assisted work is review, so the work should arrive shaped for it."
+        },
+        {
+          "key": "D",
+          "text": "Restrict the assistant to a smaller number of files in each run",
+          "correct": false,
+          "rationale": "Smaller diffs are easier to review and this genuinely helps. Slicing by file still mixes mechanical and judgement changes inside every slice."
+        }
+      ]
+    },
+    {
+      "qid": "d7-004",
+      "obj": "7.3",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "An assistant in production begins returning truncated answers for some requests but not others. The team's first instinct is to start adjusting the prompt. What is the most useful first step?",
+      "principle": "characterise the failing subset before changing anything",
+      "options": [
+        {
+          "key": "A",
+          "text": "Roll back the most recent prompt change and watch what happens",
+          "correct": false,
+          "rationale": "Bisecting by rollback is legitimate and fast when a recent change is the obvious suspect. It assumes the cause is the last change, and a partial failure often means something about the requests instead."
+        },
+        {
+          "key": "B",
+          "text": "Add an instruction telling the model to complete its answers fully",
+          "correct": false,
+          "rationale": "Cheap to try and occasionally effective. It treats truncation as a behaviour the model chose, when the more common causes are limits and lengths it does not control."
+        },
+        {
+          "key": "C",
+          "text": "Increase the output token limit so longer answers have room",
+          "correct": false,
+          "rationale": "Plausibly the actual fix, and it is a one-line change. Applying it before knowing which requests fail means not knowing afterwards whether it worked or merely moved the boundary."
+        },
+        {
+          "key": "D",
+          "text": "Characterise which requests truncate and what they have in common",
+          "correct": true,
+          "rationale": "The failure is already partitioning the traffic, which means the requests carry the explanation. Naming the shared property turns four guesses into one testable hypothesis, and every candidate fix becomes checkable against it."
+        }
+      ]
+    }
+  ]
 }

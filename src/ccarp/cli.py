@@ -103,15 +103,18 @@ def _cmd_exam(args: argparse.Namespace) -> int:
     # Every served item gets a row. Ones never reached are scored incorrect, which is what
     # running out of clock means on the real exam.
     answered = {qid for qid, _, _ in results}
+    unanswered = frozenset(i.qid for i in served if i.qid not in answered)
     for item in served:
-        if item.qid not in answered:
+        if item.qid in unanswered:
             progress_mod.append(models.Attempt(
                 ts=datetime.now(UTC), session=session, mode="exam", qid=item.qid,
                 obj=item.obj, rev=item.rev, correct=False, confidence="guess", secs=0,
             ))
 
     elapsed = int(clock.elapsed) if clock else 0
-    render.exam_report(scoring.grade(bp, served, progress_mod.read_session(session), elapsed))
+    render.exam_report(
+        scoring.grade(bp, served, progress_mod.read_session(session), elapsed, unanswered)
+    )
     return 0
 
 

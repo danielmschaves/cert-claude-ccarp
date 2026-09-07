@@ -137,10 +137,21 @@ def test_unanswered_items_are_counted_and_scored_incorrect(blueprint_path):
     served, _ = scoring.draw(bp, _full_bank(blueprint_path), "seed")
     answered = [_attempt(i.qid, i.obj, True) for i in served[:60]]
     ran_out = [_attempt(i.qid, i.obj, False, secs=0) for i in served[60:]]
-    result = scoring.grade(bp, served, answered + ran_out, 7200)
+    unanswered = frozenset(i.qid for i in served[60:])
+    result = scoring.grade(bp, served, answered + ran_out, 7200, unanswered)
     assert result.unanswered == 3
     assert result.raw_correct == 60
     assert result.raw_total == 63
+
+
+def test_a_fast_sitting_is_not_reported_as_unanswered(blueprint_path):
+    """Regression: unanswered was inferred from secs == 0, so quick answers vanished."""
+    bp = bp_mod.load(blueprint_path)
+    served, _ = scoring.draw(bp, _full_bank(blueprint_path), "seed")
+    instant = [_attempt(i.qid, i.obj, True, secs=0) for i in served]
+    result = scoring.grade(bp, served, instant, 30)
+    assert result.unanswered == 0
+    assert result.raw_correct == 63
 
 
 def test_a_perfect_sitting_reaches_the_top_of_the_scale(blueprint_path):
