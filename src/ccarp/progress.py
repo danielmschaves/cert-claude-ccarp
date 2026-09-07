@@ -68,3 +68,8 @@ def history_by_qid(attempts: list[Attempt]) -> dict[str, list[Attempt]]:
     for a in attempts:
         out.setdefault(a.qid, []).append(a)
     return out
+
+
+def read_session(session: str, path: Path | None = None) -> list[Attempt]:
+    """Rows from one sitting. Used by the exam grader, which scores that sitting alone."""
+    return [a for a in read(path) if a.session == session]

@@ -27,13 +27,25 @@ def run(
     reveal: bool = True,
     progress_path=None,
     presenter=render,
+    clock=None,
 ) -> list[tuple[str, bool, str]]:
-    """Serve each item, recording one row per item. Returns (qid, correct, confidence)."""
+    """Serve each item, recording one row per item. Returns (qid, correct, confidence).
+
+    With a clock, the run stops the moment time is up. Items never reached are the caller's
+    to record -- see cli._cmd_exam, which writes them at grading as incorrect.
+    """
     results: list[tuple[str, bool, str]] = []
     total = len(items)
 
     for index, item in enumerate(items, start=1):
-        presenter.question(item, index, total)
+        if clock is not None:
+            if clock.expired:
+                presenter.time_up()
+                break
+            warning = clock.due_warning()
+            if warning is not None:
+                presenter.time_warning(warning)
+        presenter.question(item, index, total, clock=clock)
         started = time.monotonic()
 
         chosen = presenter.ask_answer(item)

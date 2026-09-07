@@ -8,8 +8,8 @@ from datetime import UTC, datetime
 
 from . import bank as bank_mod
 from . import blueprint as blueprint_mod
+from . import models, render, report, runner, scoring, selection, stats, timer, validate
 from . import progress as progress_mod
-from . import render, report, runner, selection, stats, validate
 from .config import DEFAULT_DRILL_N
 
 
@@ -80,6 +80,41 @@ def _cmd_review(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_exam(args: argparse.Namespace) -> int:
+    bp = blueprint_mod.load()
+    bank = bank_mod.load()
+
+    served, short = scoring.draw(bp, bank, seed := scoring.new_seed(datetime.now(UTC)))
+    if short:
+        render.exam_blocked(short, report.build(bp, bank))
+        return 1
+
+    now = datetime.now(UTC)
+    session = f"exam-{now.strftime('%Y%m%dT%H%MZ')}-{seed}"
+    clock = timer.Timer(int(bp.exam["minutes"])) if args.timed else None
+    render.exam_start(len(served), bp.exam["minutes"] if args.timed else None)
+
+    try:
+        results = runner.run(served, mode="exam", session=session, reveal=False, clock=clock)
+    except KeyboardInterrupt:
+        render.out()
+        results = []
+
+    # Every served item gets a row. Ones never reached are scored incorrect, which is what
+    # running out of clock means on the real exam.
+    answered = {qid for qid, _, _ in results}
+    for item in served:
+        if item.qid not in answered:
+            progress_mod.append(models.Attempt(
+                ts=datetime.now(UTC), session=session, mode="exam", qid=item.qid,
+                obj=item.obj, rev=item.rev, correct=False, confidence="guess", secs=0,
+            ))
+
+    elapsed = int(clock.elapsed) if clock else 0
+    render.exam_report(scoring.grade(bp, served, progress_mod.read_session(session), elapsed))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="ccarp",
@@ -113,6 +148,10 @@ def build_parser() -> argparse.ArgumentParser:
     p_review.add_argument("--domain", help="restrict to one domain, e.g. d3")
     p_review.add_argument("--obj", help="restrict to one objective, e.g. 3.5")
     p_review.set_defaults(func=_cmd_review)
+
+    p_exam = sub.add_parser("exam", help="a full mock sitting at the blueprint quota")
+    p_exam.add_argument("--timed", action="store_true", help="run the exam clock")
+    p_exam.set_defaults(func=_cmd_exam)
 
     return parser
 
