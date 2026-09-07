@@ -243,3 +243,42 @@ def bank_report_markdown(reports: list) -> None:
     out("⚠️ marks a distribution tell worth a look, not a failure: answer keys clustered on one "
         "letter, the correct option being the longest too often, or one principle carrying too "
         "much of a domain. See `CLAUDE.md` for the authoring rules.")
+
+
+def _pct(value: float | None) -> str:
+    return "—" if value is None else f"{value:.0%}"
+
+
+def _stat_row(s, width: int = 10) -> str:
+    return (f"  {s.label:<{width}} "
+            f"cov {_pct(s.coverage):>4} {c(f'({s.seen}/{s.bank_size})', DIM):<18} "
+            f"mast {_pct(s.mastery):>4} {c(f'({s.mastered}/{s.bank_size})', DIM):<18} "
+            f"acc {_pct(s.accuracy):>4} {c(f'({s.correct}/{s.attempts})', DIM)}")
+
+
+def stats_report(report, by_objective: bool = False) -> None:
+    o = report.overall
+    out()
+    out(f"{c('coverage', BOLD)} {_pct(o.coverage)} {c(f'({o.seen}/{o.bank_size} seen)', DIM)}"
+        f"    {c('mastery', BOLD)} {_pct(o.mastery)} "
+        f"{c(f'({o.mastered}/{o.bank_size} correct and sure)', DIM)}")
+    if o.bank_size == 0:
+        out(c("  bank is empty -- nothing to cover yet", DIM))
+        return
+    out(f"{c('correct', BOLD)}  lifetime {_pct(o.accuracy)} "
+        f"{c(f'({o.correct}/{o.attempts})', DIM)}"
+        f"    last-{report.window} {_pct(report.last_n.accuracy)} "
+        f"{c(f'({report.last_n.correct}/{report.last_n.attempts})', DIM)}")
+    if o.stale:
+        out(c(f"  {o.stale} item(s) revised since your last attempt -- "
+              f"counted for coverage, not mastery", YELLOW))
+    out()
+    out(c("  by domain", DIM))
+    for s in report.by_domain:
+        out(_stat_row(s))
+    if by_objective:
+        out()
+        out(c("  by objective", DIM))
+        for s in report.by_objective:
+            out(_stat_row(s))
+    out()
