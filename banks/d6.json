@@ -1,4 +1,326 @@
 {
   "domain": "d6",
-  "items": []
+  "items": [
+    {
+      "qid": "d6-001",
+      "obj": "6.1",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A stakeholder opens a discovery session by describing the assistant they want, its interface and the model it should use. Nobody has yet established what problem it solves. Which question best redirects the session?",
+      "principle": "discovery starts from the current process and its cost, not the proposed solution",
+      "options": [
+        {
+          "key": "A",
+          "text": "Which of these features matters most if we cannot build them all?",
+          "correct": false,
+          "rationale": "A useful prioritisation question that will produce a ranked list. It accepts the proposed solution and merely sorts it."
+        },
+        {
+          "key": "B",
+          "text": "What would this assistant have to do to be considered a success?",
+          "correct": false,
+          "rationale": "A strong question that forces a success criterion into the open. It still frames success as a property of the assistant they have already imagined."
+        },
+        {
+          "key": "C",
+          "text": "Which systems would the assistant need access to in order to work?",
+          "correct": false,
+          "rationale": "Necessary to establish eventually, and it surfaces integration risk early. It is a feasibility question about a solution nobody has justified yet."
+        },
+        {
+          "key": "D",
+          "text": "What happens today when someone needs this, and what does it cost?",
+          "correct": true,
+          "rationale": "Moves the conversation off the proposed solution and onto the process that exists, which is the only place the value of changing it can be measured. It also produces the baseline any later benefit will be argued against."
+        }
+      ]
+    },
+    {
+      "qid": "d6-002",
+      "obj": "6.1",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A team gathered its requirements from the operations manager sponsoring the project, who was clear and available throughout. After launch the frontline staff who must use the assistant reject it. What best explains the miss?",
+      "principle": "discovery covers the people who will use it, not only the person who funds it",
+      "options": [
+        {
+          "key": "A",
+          "text": "Requirements were gathered too early in the project's lifecycle",
+          "correct": false,
+          "rationale": "Early requirements do go stale, and revisiting them is good practice. Timing does not explain a gap that would have existed on any date."
+        },
+        {
+          "key": "B",
+          "text": "Discovery reached the sponsor but not the people doing the work",
+          "correct": true,
+          "rationale": "Sponsors describe the process as it is designed; the people in it know how it actually runs. Requirements taken from one and not the other reliably miss the constraints that decide adoption."
+        },
+        {
+          "key": "C",
+          "text": "The assistant was not piloted with a small group before launch",
+          "correct": false,
+          "rationale": "A pilot would very likely have caught this, and skipping one is a real mistake. It would have detected the problem late rather than avoided creating it."
+        },
+        {
+          "key": "D",
+          "text": "Training materials for the frontline staff were not prepared",
+          "correct": false,
+          "rationale": "Adoption does suffer without support materials, and this is worth fixing. Training helps people use something built for them, not something built around them."
+        }
+      ]
+    },
+    {
+      "qid": "d6-003",
+      "obj": "6.2",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "An architect must explain to a non-technical steering group why one step uses a slower and more expensive model. The group is focused on controlling cost. What best communicates the decision?",
+      "principle": "translate the trade-off into the terms the audience decides in",
+      "options": [
+        {
+          "key": "A",
+          "text": "The cost of an error at that step, set against the model's cost",
+          "correct": true,
+          "rationale": "The group decides in money, and this puts both sides of the trade in money. It lets them apply their own judgement rather than defer to the team's."
+        },
+        {
+          "key": "B",
+          "text": "A benchmark comparison showing the accuracy gap between models",
+          "correct": false,
+          "rationale": "Rigorous evidence, and exactly right for a technical audience. It leaves the group to translate an accuracy difference into a business consequence themselves, which is the step they cannot take."
+        },
+        {
+          "key": "C",
+          "text": "A commitment to revisit the choice as cheaper models improve",
+          "correct": false,
+          "rationale": "Reassuring, and a genuinely good practice to commit to. It defers the argument instead of making it, and concedes that the current spend is unjustified."
+        },
+        {
+          "key": "D",
+          "text": "The technical reasons the smaller model failed at this step's task",
+          "correct": false,
+          "rationale": "Honest and specific, and it answers what a peer reviewer would ask. It explains the mechanism to people whose question is about consequence."
+        }
+      ]
+    },
+    {
+      "qid": "d6-004",
+      "obj": "6.2",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A team's architecture decision records list the option chosen and the reasons for it. Some months later a new engineer proposes the option that was rejected, unaware it had been considered. What best improves the record?",
+      "principle": "a decision record documents the alternatives and their triggers, not only the outcome",
+      "options": [
+        {
+          "key": "A",
+          "text": "Publish the records where the whole engineering team can find them",
+          "correct": false,
+          "rationale": "Discoverability is a real problem with decision records and worth fixing. A record found by this engineer still would not have told them why their idea was rejected."
+        },
+        {
+          "key": "B",
+          "text": "Require new proposals to be checked against past decision records",
+          "correct": false,
+          "rationale": "Creates the habit of looking, which is genuinely valuable. It enforces consulting a record that does not contain the answer being sought."
+        },
+        {
+          "key": "C",
+          "text": "Add the name of the decision-maker so they can be asked directly",
+          "correct": false,
+          "rationale": "Preserves a route to the reasoning and is cheap to add. It makes the knowledge dependent on one person's memory and continued employment."
+        },
+        {
+          "key": "D",
+          "text": "Record the options rejected and what would change the decision",
+          "correct": true,
+          "rationale": "The rejected alternatives are what a future proposer needs, and the triggers say when reopening the question is legitimate rather than uninformed. Both turn a record of what was done into one that can be reasoned with."
+        }
+      ]
+    },
+    {
+      "qid": "d6-005",
+      "obj": "6.3",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A team commits to an SLA promising the assistant will answer correctly in nearly every case. Some months in, the team and the customer disagree about which answers counted as correct. What best addresses this?",
+      "principle": "an SLA is a commitment only if its terms are measurable and agreed",
+      "options": [
+        {
+          "key": "A",
+          "text": "Raise the target so there is margin to absorb disputed cases",
+          "correct": false,
+          "rationale": "Buys headroom and reduces how often the argument matters. It changes the number in a commitment whose disputed term is not the number."
+        },
+        {
+          "key": "B",
+          "text": "Report the correctness rate as a trend rather than an absolute",
+          "correct": false,
+          "rationale": "Trends are more honest about variance and often the better reporting choice. Plotting a quantity nobody can define does not settle what it means."
+        },
+        {
+          "key": "C",
+          "text": "Define correctness as a measurable test, agreed with the customer",
+          "correct": true,
+          "rationale": "The dispute is over the definition, so the fix is a definition both sides accepted before it mattered. An SLA term that cannot be evaluated the same way by both parties was never a commitment."
+        },
+        {
+          "key": "D",
+          "text": "Move to an availability SLA, which can be measured objectively",
+          "correct": false,
+          "rationale": "Availability is unambiguous, which is why so many contracts stop there. It commits to the thing that is easy to measure rather than the thing the customer cares about."
+        }
+      ]
+    },
+    {
+      "qid": "d6-006",
+      "obj": "6.3",
+      "rev": 1,
+      "format": "multiple_response",
+      "select_n": 2,
+      "stem": "An assistant has been live for a quarter with no formal feedback path, and the team hears about problems through informal conversation. They want a durable loop. Which two changes best establish it?",
+      "principle": "a feedback loop captures signal where the work happens and returns it to the eval set",
+      "options": [
+        {
+          "key": "A",
+          "text": "Capture in-product signal on answers, tied to the run that produced it",
+          "correct": true,
+          "rationale": "Collects judgement at the moment the user has it, and the link to the run is what makes the signal diagnosable rather than merely a score."
+        },
+        {
+          "key": "B",
+          "text": "Schedule a monthly meeting with stakeholders to discuss quality",
+          "correct": false,
+          "rationale": "Real governance value and it keeps attention on quality. Monthly recollection is a poor instrument compared with signal captured at the point of use."
+        },
+        {
+          "key": "C",
+          "text": "Route captured negative signal into the eval set as new cases",
+          "correct": true,
+          "rationale": "Without this the loop terminates in a dashboard. Turning complaints into cases is what stops a fixed problem from returning."
+        },
+        {
+          "key": "D",
+          "text": "Publish a dashboard showing usage volume and latency for the team",
+          "correct": false,
+          "rationale": "Genuinely useful operational visibility that the team should have. Volume and latency describe the service, not whether its answers were any good."
+        },
+        {
+          "key": "E",
+          "text": "Ask the support team to forward complaints about the assistant",
+          "correct": false,
+          "rationale": "Better than nothing and it does formalise one existing channel. It captures only the cases annoying enough to complain about, arriving without the context to reproduce."
+        }
+      ]
+    },
+    {
+      "qid": "d6-007",
+      "obj": "6.4",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A team's architecture documentation is a detailed and accurate diagram of every component and connection, regenerated whenever the system changes. New engineers still take a long time to become productive. What best improves it?",
+      "principle": "documentation carries intent; the structure is already in the code",
+      "options": [
+        {
+          "key": "A",
+          "text": "Add further detail, including the data formats at each edge",
+          "correct": false,
+          "rationale": "More precision, and it does answer questions people have. It deepens the description of what exists, which is the part already fully documented."
+        },
+        {
+          "key": "B",
+          "text": "Add the decisions and constraints that explain why it is shaped so",
+          "correct": true,
+          "rationale": "A newcomer can read the current shape off the diagram or the code; what they cannot recover is why it is not shaped otherwise. Intent is the part that only documentation can hold."
+        },
+        {
+          "key": "C",
+          "text": "Split the diagram into one per subsystem to reduce complexity",
+          "correct": false,
+          "rationale": "Legibility is a real barrier and smaller diagrams genuinely help. It presents the same information in more digestible pieces."
+        },
+        {
+          "key": "D",
+          "text": "Automate generation so the diagram can never fall out of date",
+          "correct": false,
+          "rationale": "Staleness is the usual failure of architecture documentation, so this is a sound instinct. This diagram is already regenerated and already accurate."
+        }
+      ]
+    },
+    {
+      "qid": "d6-008",
+      "obj": "6.4",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "An architect is documenting an assistant that three teams will extend independently and release on their own schedules. Which content most reduces the risk of the teams diverging?",
+      "principle": "for independent teams, document the contract rather than the implementation",
+      "options": [
+        {
+          "key": "A",
+          "text": "A complete catalogue of the components each team may reuse",
+          "correct": false,
+          "rationale": "Encourages reuse and prevents obvious duplication of effort. A catalogue of what exists today becomes wrong as soon as the three teams start changing it."
+        },
+        {
+          "key": "B",
+          "text": "Sequence diagrams showing how a request flows through the system",
+          "correct": false,
+          "rationale": "Excellent for onboarding and for reasoning about a specific path. They describe current behaviour, which each team is about to alter."
+        },
+        {
+          "key": "C",
+          "text": "A glossary defining the domain terms all three teams will use",
+          "correct": false,
+          "rationale": "Shared vocabulary genuinely prevents a class of divergence, and is underrated. Teams can agree on every word and still break each other's assumptions."
+        },
+        {
+          "key": "D",
+          "text": "The boundaries and invariants that each team must not break",
+          "correct": true,
+          "rationale": "Independent teams need to know what they may change and what they may not. Invariants stay true as the implementation moves, which is exactly what the other options cannot do."
+        }
+      ]
+    },
+    {
+      "qid": "d6-009",
+      "obj": "6.5",
+      "rev": 1,
+      "format": "multiple_choice",
+      "select_n": 1,
+      "stem": "A pilot assistant has succeeded with a small and friendly group of users, and the team wants to move it into production. Which consideration is most likely to be underweighted at this transition?",
+      "principle": "the pilot-to-production transition is about ownership and operations, not capability",
+      "options": [
+        {
+          "key": "A",
+          "text": "Whether the model choice stays cost-effective at higher volume",
+          "correct": false,
+          "rationale": "A real question that pilots systematically fail to answer, since pilot volumes hide unit economics. It is usually visible to the team because it appears on a bill."
+        },
+        {
+          "key": "B",
+          "text": "Who owns the system's operation, and what happens when it fails",
+          "correct": true,
+          "rationale": "During a pilot the builders are the operators and a failure is a conversation. Production needs a named owner, an escalation path and a response expectation, none of which the pilot's success provides any evidence about."
+        },
+        {
+          "key": "C",
+          "text": "Whether the pilot's prompts need refining before a wider release",
+          "correct": false,
+          "rationale": "Prompts tuned on a friendly group do generalise poorly, so this deserves attention. It is the kind of quality work the team is already organised to do."
+        },
+        {
+          "key": "D",
+          "text": "How many additional users the infrastructure can support at once",
+          "correct": false,
+          "rationale": "Capacity planning is necessary and load does surface new failure modes. Scaling is a problem teams expect at this point and plan for explicitly."
+        }
+      ]
+    }
+  ]
 }
